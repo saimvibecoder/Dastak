@@ -12,9 +12,11 @@ export const metadata: Metadata = {
   description: "Dastak turns every table into a WhatsApp guest list. Diners scan a QR for a free dish, join your list, and come back when you message them.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   openGraph: { title: "Dastak for restaurants", description: "Turn every diner into a regular on WhatsApp." },
-  icons: { icon: "/icon.svg" },
+  icons: { icon: "/icon.svg", apple: "/apple-touch-icon.png" },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: { capable: true, title: "Dastak", statusBarStyle: "default" },
 };
-export const viewport: Viewport = { width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#ece4d9" };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const c = (await cookies()).get("pal")?.value;

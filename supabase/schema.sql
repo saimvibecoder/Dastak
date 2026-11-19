@@ -287,3 +287,18 @@ grant execute on function public.guest_stats(uuid) to authenticated;
 -- ---------- make yourself the admin ----------
 -- After you log in to the app once with your email, run this line with your email:
 -- insert into public.admins (user_id) select id from auth.users where email = 'you@example.com';
+
+-- ---------- admin overview (added Nov 2026) ----------
+create or replace function public.admin_overview()
+returns table (slug text, name text, area text, created_at timestamptz, guests int, week int, redeemed int, last_guest timestamptz, owners text, invited text)
+language sql stable security definer set search_path = public as $$
+  select r.slug, r.name, r.area, r.created_at,
+    (select count(*) from guests g where g.restaurant_id = r.id)::int,
+    (select count(*) from guests g where g.restaurant_id = r.id and g.created_at > now() - interval '7 days')::int,
+    (select count(*) from guests g where g.restaurant_id = r.id and g.redeemed_at is not null)::int,
+    (select max(g.created_at) from guests g where g.restaurant_id = r.id),
+    (select string_agg(m.email, ', ') from members m where m.restaurant_id = r.id and m.role = 'owner'),
+    (select string_agg(i.email, ', ') from invites i where i.restaurant_id = r.id and i.role = 'owner')
+  from restaurants r where is_admin() order by r.created_at desc
+$$;
+grant execute on function public.admin_overview() to authenticated;

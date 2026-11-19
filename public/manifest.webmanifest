@@ -1,0 +1,17 @@
+{
+  "id": "/app",
+  "name": "Dastak",
+  "short_name": "Dastak",
+  "description": "Your restaurant's WhatsApp guest list.",
+  "start_url": "/app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ece4d9",
+  "theme_color": "#ece4d9",
+  "icons": [
+    { "src": "/icons/app-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/app-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/app-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
