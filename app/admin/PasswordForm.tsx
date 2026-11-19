@@ -15,7 +15,7 @@ export default function PasswordForm() {
     const { error } = await supabaseBrowser().auth.updateUser({ password: pw });
     setBusy(false);
     if (error) { setMsg({ err: error.message.includes("weak") || error.message.includes("Password") ? error.message : "Couldn't save the password. Log out, log in again with a code, and retry." }); return; }
-    setPw(""); setPw2(""); setMsg({ ok: "Password saved. Next time, use \"Log in with password\" on the login page." });
+    setPw(""); setPw2(""); setMsg({ ok: "Password saved. Next time, log in at dastak.food/admin/login." });
   }
   return (<form className="stackform" onSubmit={save} style={{ marginTop: 16 }} noValidate>
     <div className="field"><label htmlFor="np">New password</label><div className="row" style={{ flexWrap: "nowrap" }}><input className="inp" id="np" type={show ? "text" : "password"} autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} />
