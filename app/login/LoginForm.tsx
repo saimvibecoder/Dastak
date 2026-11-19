@@ -32,8 +32,8 @@ export default function LoginForm() {
 
   if (step === "code") return (
     <form className="stackform" onSubmit={verify} noValidate>
-      <p className="notice ok">We emailed a login link to {email}. Tap it on any device to log in. It can take a minute; check spam too.</p>
-      <div className="field"><label htmlFor="otp">Got a 6-digit code instead? <span className="c5">(optional)</span></label>
+      <p className="notice ok">We emailed a code to {email}. Type it here, or tap the link in the same email. It can take a minute; check spam too.</p>
+      <div className="field"><label htmlFor="otp">Login code</label>
         <input className={`inp mono ${err ? "bad" : ""}`} id="otp" inputMode="numeric" autoComplete="one-time-code" maxLength={10} value={code} onChange={(e) => setCode(e.target.value)} placeholder="123456" style={{ letterSpacing: ".2em", fontSize: 20 }} />
         <div className="err" role="alert">{err}</div></div>
       <button className="btn pri" type="submit" disabled={busy}>{busy ? "Checking" : "Log in"}</button>
@@ -45,7 +45,7 @@ export default function LoginForm() {
       <div className="field"><label htmlFor="em">Email</label>
         <input className={`inp ${err ? "bad" : ""}`} id="em" type="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="owner@kebabkothi.in" />
         <div className="err" role="alert">{err}</div></div>
-      <button className="btn pri" type="submit" disabled={busy}>{busy ? "Sending" : "Email me a login link"}</button>
+      <button className="btn pri" type="submit" disabled={busy}>{busy ? "Sending" : "Email me a login code"}</button>
     </form>
   );
 }
