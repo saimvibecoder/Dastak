@@ -11,7 +11,7 @@ export default function LoginForm() {
     const em = email.trim().toLowerCase();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { setState("error"); setMsg("Enter a full email address, like name@restaurant.in."); return; }
     setState("sending");
-    const site = (process.env.NEXT_PUBLIC_SITE_URL || window.location.origin).replace(/\/$/, "");
+    const site = window.location.origin;
     const { error } = await supabaseBrowser().auth.signInWithOtp({ email: em, options: { emailRedirectTo: `${site}/auth/callback` } });
     if (error) { setState("error"); setMsg(error.status === 429 ? "Too many links asked for. Wait a minute and try again." : "We couldn't send the link. Check the address and try again."); return; }
     setState("sent");
