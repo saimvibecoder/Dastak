@@ -20,7 +20,7 @@ export default async function Overview({ params }: { params: Promise<{ slug: str
   const pct = (a: number) => (s.all ? Math.round((a / s.all) * 100) + "%" : "0%");
   const diff = s.week - s.prev_week;
   const kpis = [["Guests on list", s.total.toLocaleString("en-IN"), "opted in"], ["New this week", String(s.week), `${diff >= 0 ? "+" : ""}${diff} vs last week`],
-    ["Starters claimed", pct(s.redeemed), `${s.redeemed} codes used`], ["Came back", pct(s.repeat), `${s.repeat} repeat guests`]];
+    ["Offers claimed", pct(s.redeemed), `${s.redeemed} codes used`], ["Came back", pct(s.repeat), `${s.repeat} repeat guests`]];
   const series = (days ?? []).map((d: { day: string; n: number }) => ({ label: fmtDate(d.day + "T12:00:00+05:30"), n: d.n }));
 
   if (!s.all) return (

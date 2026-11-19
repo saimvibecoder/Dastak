@@ -12,7 +12,7 @@ export function SettingsForm({ slug, r }: { slug: string; r: Restaurant }) {
   return (<form action={act} className="stackform" style={{ marginTop: 16 }}>
     <div className="field"><label htmlFor="n">Name</label><input className="inp" id="n" name="name" defaultValue={r.name} required maxLength={60} /></div>
     <div className="field"><label htmlFor="a">Area</label><input className="inp" id="a" name="area" defaultValue={r.area ?? ""} maxLength={60} placeholder="Aminabad" /></div>
-    <div className="field"><label htmlFor="o">Free offer on the table card</label><input className="inp" id="o" name="offer" defaultValue={r.offer} required maxLength={80} placeholder="free Galouti kebab plate" /></div>
+    <div className="field"><label htmlFor="o">Free offer on the table card</label><input className="inp" id="o" name="offer" defaultValue={r.offer} required maxLength={80} placeholder="free dish" /></div>
     <div className="field"><label htmlFor="w">Restaurant WhatsApp number</label><input className="inp" id="w" name="whatsapp" inputMode="numeric" defaultValue={r.whatsapp ?? ""} placeholder="919876543210" />
       <span className="c5">Guests can save this chat after claiming. Digits only, with 91 in front.</span></div>
     <div className="field"><label htmlFor="t">Number of tables</label><input className="inp" id="t" name="tables" type="number" min={1} max={200} defaultValue={r.tables} /></div>

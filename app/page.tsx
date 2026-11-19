@@ -30,7 +30,7 @@ export default async function Home() {
           <div className="wrap">
             <span className="badge fu d1"><b></b>Built for restaurants in Lucknow</span>
             <h1 className="fu d2">Turn every diner into a <em>regular</em> on WhatsApp</h1>
-            <p className="sub fu d3">A QR on every table offers a free starter. Guests leave their WhatsApp number to claim it, and you message them when Monday afternoons go quiet.</p>
+            <p className="sub fu d3">A QR on every table offers a free dish. Guests leave their WhatsApp number to claim it, and you message them when Monday afternoons go quiet.</p>
             <div className="ctas fu d4">
               <a className="btn pri" href={book} target="_blank" rel="noopener">Book a free walkthrough</a>
               <a className="btn ghost" href="#how"><span className="play"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1l7 4-7 4z" fill="currentColor" /></svg></span>See how it works</a>
@@ -43,7 +43,7 @@ export default async function Home() {
                   <div>
                     <div className="row" style={{ marginBottom: 16 }}><div><div className="c5">Sample restaurant</div><div className="t3">This week</div></div><span className="sp"></span><span className="chip ok">Live</span></div>
                     <div className="grid g4">
-                      {[["Guests on list", "251", "opted in"], ["New this week", "42", "+3 vs last week"], ["Starters claimed", "69%", "182 codes used"], ["Came back", "22%", "59 repeat guests"]].map(([l, n, d]) => (
+                      {[["Guests on list", "251", "opted in"], ["New this week", "42", "+3 vs last week"], ["Offers claimed", "69%", "182 codes used"], ["Came back", "22%", "59 repeat guests"]].map(([l, n, d]) => (
                         <div className="card kpi" style={{ padding: 16 }} key={l}><div className="c5">{l}</div><div className="n mono">{n}</div><div className="d">{d}</div></div>
                       ))}
                     </div>
@@ -61,8 +61,8 @@ export default async function Home() {
         <section className="band" id="how"><div className="wrap">
           <div className="sec-h rv"><h2>Four steps from table to <em>return</em> visit</h2><p>Everything runs on the phones your guests and staff already carry.</p></div>
           <div className="grid g4">
-            {[["Guest scans the table card", "A branded QR card offers a free starter. The phone camera opens your offer page."],
-              ["They claim the starter", "Name, WhatsApp number, birthday if they like, and a consent tick. They get a code to show the server."],
+            {[["Guest scans the table card", "A branded QR card offers a free dish. The phone camera opens your offer page."],
+              ["They claim the dish", "Name, WhatsApp number, birthday if they like, and a consent tick. They get a code to show the server."],
               ["Your list grows daily", "Every claim lands in your dashboard with the table, visit time and whether the code was used."],
               ["You fill the quiet hours", "See which slot is emptiest, pick a ready offer, and send it to your guests on WhatsApp."]].map(([t, p], i) => (
               <div className="card step rv" key={t}><div className="num">Step {i + 1}</div><h3>{t}</h3><p>{p}</p></div>
@@ -103,7 +103,7 @@ export default async function Home() {
         <section className="band" style={{ paddingTop: 0 }}><div className="wrap">
           <div className="final rv">
             <h2>See it running on your <em>own</em> tables</h2>
-            <p className="c2" style={{ margin: "16px auto 32px", maxWidth: 520 }}>A short visit: we look at your tables and menu, pick the free starter, and set up the dashboard with your restaurant&apos;s name on it.</p>
+            <p className="c2" style={{ margin: "16px auto 32px", maxWidth: 520 }}>A short visit: we look at your tables and menu, pick the free dish, and set up the dashboard with your restaurant&apos;s name on it.</p>
             <div className="ctas" style={{ marginTop: 0 }}><a className="btn pri" href={book} target="_blank" rel="noopener">Book a free walkthrough</a><Link className="btn ghost" href="/login">Owner log in</Link></div>
           </div>
         </div></section>

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Nav from "@/components/Nav";
 import { requireUser } from "@/lib/data";
 import CreateForm from "./CreateForm";
+import PasswordForm from "./PasswordForm";
 
 export const metadata = { title: "Admin" };
 export default async function Admin() {
@@ -16,5 +17,8 @@ export default async function Admin() {
       <div className="card"><span className="t3">Add a restaurant</span><CreateForm /></div>
       <div className="card"><span className="t3">{rs?.length ?? 0} on Dastak</span>{(rs ?? []).map((r) => (
         <div className="qitem" key={r.slug}><div className="sp"><div className="t3 b6">{r.name}</div><div className="c5">/{r.slug}{r.area ? ` · ${r.area}` : ""}</div></div><Link className="btn ghost sm" href={`/app/${r.slug}`}>Open</Link></div>))}</div>
-    </div></main></>);
+    </div>
+    <div className="card" style={{ marginTop: 16, maxWidth: 520 }}><span className="t3">Your admin password</span>
+      <p className="c2" style={{ marginTop: 4 }}>Set a password so you can log in without waiting for an email code.</p><PasswordForm /></div>
+    </main></>);
 }

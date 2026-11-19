@@ -10,7 +10,7 @@ create table if not exists public.restaurants (
   slug text unique not null check (slug ~ '^[a-z0-9-]{3,40}$'),
   name text not null check (char_length(name) between 2 and 60),
   area text check (char_length(area) <= 60),
-  offer text not null default 'free starter' check (char_length(offer) between 3 and 80),
+  offer text not null default 'free dish' check (char_length(offer) between 3 and 80),
   code_prefix text not null default 'DK' check (code_prefix ~ '^[A-Z]{2,4}$'),
   whatsapp text check (whatsapp is null or whatsapp ~ '^[0-9]{10,15}$'),
   palette text not null default 'sand' check (palette in ('blush','mist','sage','sand','lilac','night')),

@@ -11,7 +11,7 @@ export default function CreateForm() {
     <div className="field"><label htmlFor="cs">Web address</label><input className="inp mono" id="cs" name="slug" required value={slug} onChange={(e) => { setTouched(true); setSlug(e.target.value.toLowerCase()); }} placeholder="kebab-kothi" />
       <span className="c5">Guests land on /r/{slug || "kebab-kothi"}/t/12</span></div>
     <div className="field"><label htmlFor="ca">Area</label><input className="inp" id="ca" name="area" placeholder="Aminabad" /></div>
-    <div className="field"><label htmlFor="co">Free offer</label><input className="inp" id="co" name="offer" required placeholder="free Galouti kebab plate" /></div>
+    <div className="field"><label htmlFor="co">Free offer</label><input className="inp" id="co" name="offer" required defaultValue="free dish" placeholder="free dish" /></div>
     <div className="row" style={{ alignItems: "flex-start" }}>
       <div className="field sp"><label htmlFor="cp">Code prefix</label><input className="inp mono" id="cp" name="prefix" required maxLength={4} placeholder="KK" /></div>
       <div className="field sp"><label htmlFor="ct">Tables</label><input className="inp" id="ct" name="tables" type="number" min={1} max={200} defaultValue={12} /></div></div>

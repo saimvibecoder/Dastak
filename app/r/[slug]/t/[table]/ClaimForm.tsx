@@ -61,7 +61,7 @@ export default function ClaimForm({ slug, table, r }: { slug: string; table: num
         <label className="ck"><input type="checkbox" checked={f.consent} onChange={(e) => setF({ ...f, consent: e.target.checked })} /> <span>Send me offers from {r.name} on WhatsApp. I can leave the list any time.</span></label>
         <div className="err">{errs.consent}</div>
         {server && <p className="notice err" role="alert">{server}</p>}
-        <button className="btn pri" type="submit" disabled={busy}>{busy ? "Saving" : "Claim my free starter"}</button>
+        <button className="btn pri" type="submit" disabled={busy}>{busy ? "Saving" : "Claim my free dish"}</button>
       </form>
     </div>
   );
