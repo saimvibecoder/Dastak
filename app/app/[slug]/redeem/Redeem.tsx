@@ -6,11 +6,11 @@ import { fmtDate } from "@/lib/util";
 type Guest = { id: string; name: string; table_no: number | null; created_at: string; redeemed_at: string | null; code: string };
 export default function Redeem({ slug, prefix, offer }: { slug: string; prefix: string; offer: string }) {
   const [code, setCode] = useState(""); const [g, setG] = useState<Guest | null>(null); const [err, setErr] = useState(""); const [ok, setOk] = useState(""); const [pending, start] = useTransition();
-  return (<div className="card" style={{ maxWidth: 520 }}><span className="t3">Check a guest&apos;s code at the table</span>
+  return (<div className="card" style={{ maxWidth: 520 }}><span className="t3">Check a guest&apos;s code at the table</span><p className="c5" style={{ marginTop: 4 }}>Just the 4 numbers is enough. Capitals and the dash don&apos;t matter.</p>
     <form className="row" style={{ marginTop: 16, flexWrap: "nowrap" }} noValidate onSubmit={(e) => { e.preventDefault(); setOk(""); setErr(""); setG(null);
       if (!code.trim()) { setErr("Enter the code the guest shows you."); return; }
       start(async () => { const res = await findCode(slug, code); if ("error" in res) setErr(res.error!); else setG(res.guest as Guest); }); }}>
-      <input className="inp mono" value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder={`${prefix}-4821`} aria-label="Guest code" autoCapitalize="characters" />
+      <input className="inp mono" value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder={`4821 or ${prefix}-4821`} inputMode="text" aria-label="Guest code" autoCapitalize="characters" />
       <button className="btn pri" disabled={pending}>Check</button></form>
     <div style={{ marginTop: 16 }} aria-live="polite">
       {err && <p className="err" style={{ fontSize: 14 }}>{err}</p>}

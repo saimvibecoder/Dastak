@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { wa, firstName } from "@/lib/util";
 
 type R = { name: string; area: string | null; offer: string; whatsapp: string | null };
@@ -9,6 +9,14 @@ export default function ClaimForm({ slug, table, r }: { slug: string; table: num
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState<{ code: string } | null>(null);
   const [server, setServer] = useState("");
+  const [copied, setCopied] = useState(false);
+  const key = `dastak:code:${slug}`;
+  // If the guest scans again or reopens the page, show the code they already got.
+  useEffect(() => { try { const v = JSON.parse(localStorage.getItem(key) || "null"); if (v?.code) { setDone({ code: v.code }); setF((x) => ({ ...x, name: v.name || x.name })); } } catch {} }, [key]);
+  async function copy() {
+    if (!done) return;
+    try { await navigator.clipboard.writeText(done.code); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { setCopied(false); }
+  }
   const where = [r.name, r.area].filter(Boolean).join(" · ") + (table ? ` · Table ${table}` : "");
 
   async function submit(e: React.FormEvent) {
@@ -26,15 +34,18 @@ export default function ClaimForm({ slug, table, r }: { slug: string; table: num
     const data = res ? await res.json().catch(() => ({})) : {};
     if (!res || !res.ok) { setServer(data.error || "No connection. Check your internet and try again."); return; }
     setDone({ code: data.code });
+    try { localStorage.setItem(key, JSON.stringify({ code: data.code, name: f.name.trim() })); } catch {}
   }
 
   if (done) return (
     <div className="gcard">
       <div className="gtop"><div className="c5" style={{ color: "inherit", opacity: .8 }}>{where}</div>
-        <h1 style={{ marginTop: 12 }}>You&apos;re on the list, {firstName(f.name.trim())}</h1>
+        <h1 style={{ marginTop: 12 }}>You&apos;re on the list{f.name.trim() ? `, ${firstName(f.name.trim())}` : ""}</h1>
         <p>Show this code to your server for your {r.offer}.</p></div>
       <div className="gbody">
         <div className="code mono" aria-label={`Your code is ${done.code}`}>{done.code}</div>
+        <button type="button" className="btn" onClick={copy}>{copied ? "Copied" : "Copy code"}</button>
+        <p className="c2" style={{ textAlign: "center" }} aria-live="polite">Take a screenshot or copy the code. You&apos;ll show it when your food arrives. Scanning the table card again also brings it back.</p>
         {r.whatsapp && <>
           <a className="btn wa" target="_blank" rel="noopener" href={wa(r.whatsapp, `Hi ${r.name}, I'm ${f.name.trim()}${table ? ` at table ${table}` : ""}. My code is ${done.code}.`)}>Save {r.name} on WhatsApp</a>
           <p className="c2" style={{ textAlign: "center" }}>Saving the chat means their offers reach you, not your spam folder.</p></>}

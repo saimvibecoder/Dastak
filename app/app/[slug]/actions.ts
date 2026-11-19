@@ -31,8 +31,11 @@ export async function deleteGuest(slug: string, guestId: string) {
 }
 export async function findCode(slug: string, code: string) {
   const { sb, r } = await requireRestaurant(slug);
-  const c = code.trim().toUpperCase();
-  if (!/^[A-Z]{2,4}-\d{4}$/.test(c)) return { error: `Codes look like ${r.code_prefix}-4821. Check the letters and numbers.` };
+  // Forgiving input: "dd1563", "dd 1563", "DD-1563" and just "1563" all work.
+  const raw = code.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const m = /^([A-Z]{2,4})?(\d{4})$/.exec(raw);
+  if (!m) return { error: `Type the 4 numbers from the guest's code, like 4821.` };
+  const c = `${m[1] ?? r.code_prefix}-${m[2]}`;
   const { data } = await sb.from("guests").select("id,name,table_no,created_at,redeemed_at,code").eq("restaurant_id", r.id).eq("code", c).maybeSingle();
   if (!data) return { error: `No guest has code ${c}. Check the letters and numbers again.` };
   return { guest: data };
