@@ -2,6 +2,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireUser } from "@/lib/data";
+import { ensureAccount } from "@/lib/accounts";
 
 const In = z.object({
   name: z.string().trim().min(2).max(60), area: z.string().trim().max(60), offer: z.string().trim().min(3).max(80),
@@ -15,5 +16,6 @@ export async function createRestaurant(_: unknown, fd: FormData) {
   const v = p.data;
   const { error } = await sb.rpc("admin_create_restaurant", { p_slug: v.slug, p_name: v.name, p_area: v.area, p_offer: v.offer, p_prefix: v.prefix, p_tables: v.tables, p_owner_email: v.email });
   if (error) return { error: error.code === "23505" ? `The address /${v.slug} is taken. Pick another.` : "Couldn't create it. Only admins can add restaurants." };
+  try { await ensureAccount(v.email); } catch { return { error: "Restaurant created, but the owner's login couldn't be set up. Open it and re-invite the owner in Settings." }; }
   redirect(`/app/${v.slug}`);
 }

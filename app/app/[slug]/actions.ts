@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireRestaurant } from "@/lib/data";
 import { isPalette } from "@/lib/palettes";
+import { ensureAccount } from "@/lib/accounts";
 
 const uuid = z.string().uuid();
 const done = (slug: string) => { revalidatePath(`/app/${slug}`, "layout"); };
@@ -63,7 +64,9 @@ export async function invite(slug: string, _: unknown, fd: FormData) {
   const email = String(fd.get("email") || "").trim().toLowerCase(); const rl = fd.get("role") === "owner" ? "owner" : "staff";
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return { error: "Enter a full email address." };
   const { error } = await sb.from("invites").upsert({ restaurant_id: r.id, email, role: rl }, { onConflict: "restaurant_id,email" });
-  done(slug); return error ? { error: "Couldn't add the invite. Try again." } : { ok: `Invited ${email}. They log in at the login page with this email.` };
+  if (error) return { error: "Couldn't add the invite. Try again." };
+  try { await ensureAccount(email); } catch { return { error: "Invite saved, but their login couldn't be set up. Try again." }; }
+  done(slug); return { ok: `Invited ${email}. They log in at dastak.food/login with this email.` };
 }
 export async function cancelInvite(slug: string, id: string) {
   const { sb, r } = await requireRestaurant(slug);

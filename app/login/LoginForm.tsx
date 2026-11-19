@@ -14,9 +14,9 @@ export default function LoginForm() {
     const em = email.trim().toLowerCase();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { setErr("Enter a full email address, like name@restaurant.in."); return; }
     setBusy(true);
-    const { error } = await supabaseBrowser().auth.signInWithOtp({ email: em, options: { emailRedirectTo: `${window.location.origin}/auth/finish` } });
+    const { error } = await supabaseBrowser().auth.signInWithOtp({ email: em, options: { emailRedirectTo: `${window.location.origin}/auth/finish`, shouldCreateUser: false } });
     setBusy(false);
-    if (error) { setErr(error.status === 429 ? "Too many emails asked for. Wait a minute and try again." : "We couldn't send the email. Check the address and try again."); return; }
+    if (error) { setErr(error.status === 429 ? "Too many emails asked for. Wait a minute and try again." : /signup|not allowed|not found/i.test(error.message) ? "This email isn't set up on Dastak yet. Ask your restaurant's owner to invite you, or contact Dastak." : "We couldn't send the email. Check the address and try again."); return; }
     setEmail(em); setStep("code");
   }
   async function verify(e: React.FormEvent) {
