@@ -3,7 +3,7 @@ import { z } from "zod";
 import { supabaseService } from "@/lib/supabase/admin";
 import { ipHash, sameOrigin } from "@/lib/guard";
 
-const Body = z.object({ slug: z.string().regex(/^[a-z0-9-]{3,40}$/), phone: z.string().regex(/^[6-9]\d{9}$/) });
+const Body = z.object({ slug: z.string().regex(/^[a-z0-9-]{3,40}$/), phone: z.string().regex(/^[6-9]\d{9}$/) }).strict();
 export async function POST(req: NextRequest) {
   if (!sameOrigin(req)) return NextResponse.json({ error: "Not allowed." }, { status: 403 });
   const parsed = Body.safeParse(await req.json().catch(() => null));

@@ -8,7 +8,7 @@ Next.js 15 (App Router) · Supabase (Postgres, auth, row level security) · Verc
 
 1. **Supabase:** create a free project at supabase.com (Mumbai region). Open SQL Editor, paste `supabase/schema.sql`, run it.
 2. **Auth URLs:** in Supabase › Authentication › URL Configuration, set Site URL to your live address and add `https://YOUR-SITE/auth/callback` to Redirect URLs.
-3. **Environment:** copy `.env.example` to `.env.local` (and add the same values in Vercel › Settings › Environment Variables). `SUPABASE_SERVICE_ROLE_KEY` is server only; never give it a `NEXT_PUBLIC_` name.
+3. **Environment:** copy `.env.example` to `.env.local` (and add the same values in Vercel › Settings › Environment Variables). `SUPABASE_SERVICE_ROLE_KEY` takes the **secret** key (`sb_secret_…`, or the legacy service_role key) and is server only; never give it a `NEXT_PUBLIC_` name.
 4. **Run:** `npm install` then `npm run dev`.
 5. **Make yourself admin:** log in once at `/login`, then run in SQL Editor:
    `insert into public.admins (user_id) select id from auth.users where email = 'you@example.com';`

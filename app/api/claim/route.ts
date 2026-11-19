@@ -11,7 +11,7 @@ const Body = z.object({
   bday: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().or(z.literal("")),
   consent: z.literal(true),
   website: z.string().max(0).optional(), // honeypot: bots fill it, people never see it
-});
+}).strict();
 const MSG: Record<string, string> = {
   exists: "This number already claimed a starter here. Show your code to the server, or ask them to look you up.",
   slow_down: "Too many tries from this connection. Wait a few minutes and try again.",
