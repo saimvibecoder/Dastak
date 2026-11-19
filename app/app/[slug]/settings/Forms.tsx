@@ -1,6 +1,9 @@
 "use client";
 import { useActionState, useTransition } from "react";
-import { saveSettings, invite, cancelInvite, removeMember } from "../actions";
+import { useState } from "react";
+import { saveSettings, saveSlowSlots, invite, cancelInvite, removeMember } from "../actions";
+import { PARTS, type Slot } from "@/lib/slots";
+import { DAYS } from "@/lib/util";
 import { PALETTES } from "@/lib/palettes";
 import type { Restaurant } from "@/lib/data";
 
@@ -13,6 +16,11 @@ export function SettingsForm({ slug, r }: { slug: string; r: Restaurant }) {
     <div className="field"><label htmlFor="n">Name</label><input className="inp" id="n" name="name" defaultValue={r.name} required maxLength={60} /></div>
     <div className="field"><label htmlFor="a">Area</label><input className="inp" id="a" name="area" defaultValue={r.area ?? ""} maxLength={60} placeholder="Aminabad" /></div>
     <div className="field"><label htmlFor="o">Free offer on the table card</label><input className="inp" id="o" name="offer" defaultValue={r.offer} required maxLength={80} placeholder="free dish" /></div>
+    <div className="field"><label htmlFor="cs">Table card and guest page style</label>
+      <select className="inp" id="cs" name="card_style" defaultValue={r.card_style ?? "free"}>
+        <option value="free">Free dish: &ldquo;A {r.offer}, on us&rdquo;</option>
+        <option value="premium">Premium: &ldquo;Join our guest list for private offers&rdquo;</option></select>
+      <span className="c5">Premium suits upscale places. The offer above becomes a smaller welcome gift.</span></div>
     <div className="field"><label htmlFor="w">Restaurant WhatsApp number</label><input className="inp" id="w" name="whatsapp" inputMode="numeric" defaultValue={r.whatsapp ?? ""} placeholder="919876543210" />
       <span className="c5">Guests can save this chat after claiming. Digits only, with 91 in front.</span></div>
     <div className="field"><label htmlFor="t">Number of tables</label><input className="inp" id="t" name="tables" type="number" min={1} max={200} defaultValue={r.tables} /></div>
@@ -40,4 +48,20 @@ export function InviteRow({ slug, i }: { slug: string; i: { id: string; email: s
   const [pending, start] = useTransition();
   return (<div className="qitem"><div className="sp"><div className="t3 b6">{i.email}</div><div className="c5">Invited as {i.role}, not logged in yet</div></div>
     <button className="btn ghost sm" disabled={pending} onClick={() => start(() => cancelInvite(slug, i.id))}>Cancel</button></div>);
+}
+
+export function SlowHours({ slug, initial }: { slug: string; initial: Slot[] }) {
+  const [on, setOn] = useState<Set<string>>(new Set(initial.map((x) => `${x.d}:${x.p}`)));
+  const [s, setS] = useState<S>(null); const [pending, start] = useTransition();
+  const flip = (k: string) => { setS(null); setOn((o) => { const n = new Set(o); if (n.has(k)) n.delete(k); else n.add(k); return n; }); };
+  return (<div style={{ marginTop: 12 }}>
+    <p className="c2">Tick the times your dining room is usually quiet. On those days your dashboard reminds you to send an offer.</p>
+    <div className="scroll" style={{ marginTop: 12 }}><table className="slots"><thead><tr><th></th>{PARTS.map((p) => <th key={p.id}><div>{p.label}</div><div className="c5">{p.range}</div></th>)}</tr></thead>
+      <tbody>{DAYS.map((d, di) => (<tr key={d}><th scope="row">{d.slice(0, 3)}</th>{PARTS.map((p) => { const k = `${di}:${p.id}`; return (
+        <td key={k}><button type="button" className={`slot ${on.has(k) ? "on" : ""}`} aria-pressed={on.has(k)} aria-label={`${d} ${p.label}`} onClick={() => flip(k)}>{on.has(k) ? "Slow" : ""}</button></td>); })}</tr>))}</tbody></table></div>
+    <div style={{ marginTop: 12 }}><Msg s={s} /></div>
+    <button className="btn pri" style={{ marginTop: 8 }} disabled={pending} onClick={() => start(async () => {
+      setS(await saveSlowSlots(slug, [...on].map((k) => { const [d, p] = k.split(":"); return { d: Number(d), p }; })));
+    })}>{pending ? "Saving" : "Save slow hours"}</button>
+  </div>);
 }

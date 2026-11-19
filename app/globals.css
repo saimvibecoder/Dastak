@@ -300,3 +300,48 @@ a.plain{text-decoration:none}
 .logo .dlogo{margin-right:2px}
 .hero-mark{display:flex;justify-content:center;margin-bottom:24px}
 @media(prefers-reduced-motion:reduce){.dlogo.go,.dlogo.go *{animation:none!important}.dlogo .dr{transform:rotateY(-38deg)}.dlogo .lt{opacity:.85}}
+
+/* ---------- guest pass (Nov 2026) ---------- */
+.gtop .eyebrow{font-size:12px;line-height:16px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+.gtop h1{letter-spacing:-.02em}
+.pass{position:relative;border-radius:20px;background:var(--accent);color:var(--afg,#fff);padding:20px 22px;box-shadow:var(--upl,0 8px 24px rgba(0,0,0,.12));overflow:hidden}
+.pass::before,.pass::after{content:"";position:absolute;top:50%;width:22px;height:22px;margin-top:-11px;border-radius:50%;background:var(--bg)}
+.pass::before{left:-11px}.pass::after{right:-11px}
+.pass-h,.pass-f{display:flex;justify-content:space-between;gap:12px;font-size:12px;line-height:16px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.9}
+.pass-code{margin:18px 0;padding:14px 0;text-align:center;font-size:40px;line-height:44px;font-weight:700;letter-spacing:.1em;border-top:1px dashed color-mix(in srgb,currentColor 45%,transparent);border-bottom:1px dashed color-mix(in srgb,currentColor 45%,transparent)}
+.pass-f span:first-child{text-transform:none;letter-spacing:0;font-size:14px;line-height:20px}
+
+/* ---------- table cards (Nov 2026) ---------- */
+.tcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px}
+.tcard{position:relative;background:#f6efe6;color:#2b1a12;border-radius:20px;padding:28px 24px 20px;text-align:center;box-shadow:var(--upl,0 8px 24px rgba(0,0,0,.08));display:flex;flex-direction:column;align-items:center;gap:10px}
+.tc-eyebrow{font-size:12px;line-height:16px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#9c4f2e}
+.tc-h{font-size:30px;line-height:34px;font-weight:800;letter-spacing:-.02em}
+.tc-h em{font-style:normal;color:#9c4f2e}
+.tc-sub{font-size:14px;line-height:20px;color:#6b5546;max-width:220px}
+.tc-qr{width:168px;height:168px;background:#fff;border-radius:16px;padding:12px;margin-top:6px;box-shadow:0 2px 0 rgba(0,0,0,.04)}
+.tc-qr svg{width:100%;height:100%;display:block}
+.tc-hint{font-size:12px;line-height:16px;color:#6b5546}
+.tc-foot{width:100%;display:flex;justify-content:space-between;margin-top:8px;padding-top:12px;border-top:1px solid #e3d6c6;font-size:12px;line-height:16px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.tc-foot span:last-child{font-weight:600;color:#9c4f2e}
+.tcard.prem{background:#1f1612;color:#f3e7d6}
+.tcard.prem .tc-eyebrow,.tcard.prem .tc-h em,.tcard.prem .tc-foot span:last-child{color:#d9b27c}
+.tcard.prem .tc-sub,.tcard.prem .tc-hint{color:#cdbba5}
+.tcard.prem .tc-foot{border-top-color:#3a2c24}
+.tc-test{margin-top:4px}
+@media print{
+  .tcards{grid-template-columns:repeat(2,1fr);gap:10mm}
+  .tcard{break-inside:avoid;box-shadow:none;border:1px solid #e3d6c6;-webkit-print-color-adjust:exact;print-color-adjust:exact;min-height:120mm;justify-content:center}
+}
+.slots{border-collapse:separate;border-spacing:6px;width:100%;min-width:420px}
+.slots th{font-size:13px;font-weight:600;text-align:center;padding:2px}
+.slots th[scope=row]{text-align:left}
+.slot{width:100%;height:40px;border-radius:12px;border:0;background:var(--bg);box-shadow:var(--upl,0 1px 3px rgba(0,0,0,.1));font:inherit;font-size:12px;font-weight:700;color:var(--afg,#fff);cursor:pointer}
+.slot.on{background:var(--accent);box-shadow:var(--down,inset 0 1px 3px rgba(0,0,0,.2))}
+.slot:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.nudge{display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.funnel{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.fstep{position:relative;padding:14px;border-radius:16px;background:var(--bg);box-shadow:var(--down,inset 0 1px 3px rgba(0,0,0,.08))}
+.fstep .n{font-size:28px;line-height:32px;font-weight:700;margin:4px 0}
+.frate{margin-top:8px;font-size:12px;line-height:16px;font-weight:700;color:var(--accent)}
+@media (max-width:760px){.funnel{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.choice{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:var(--bg);box-shadow:var(--down,inset 0 1px 3px rgba(0,0,0,.08))}

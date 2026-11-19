@@ -13,7 +13,7 @@ const Body = z.object({
   website: z.string().max(0).optional(), // honeypot: bots fill it, people never see it
 }).strict();
 const MSG: Record<string, string> = {
-  exists: "This number already claimed a starter here. Show your code to the server, or ask them to look you up.",
+  exists: "This number is already on the guest list here, so its welcome offer has been claimed. Your server can look you up by your number.",
   slow_down: "Too many tries from this connection. Wait a few minutes and try again.",
   not_found: "This restaurant isn't on Dastak any more.",
   busy: "Something went wrong creating your code. Try again.",
