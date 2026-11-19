@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
     const sb = await supabaseServer();
     const { error } = await sb.auth.exchangeCodeForSession(code);
     if (!error) { await sb.rpc("accept_invites"); return NextResponse.redirect(to); }
+    console.error("auth/callback failed:", error.message);
   }
   return NextResponse.redirect(new URL("/login?error=link", req.url));
 }
