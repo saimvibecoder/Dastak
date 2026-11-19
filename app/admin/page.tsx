@@ -5,6 +5,7 @@ import { requireUser } from "@/lib/data";
 import { fmtDate } from "@/lib/util";
 import CreateForm from "./CreateForm";
 import PasswordForm from "./PasswordForm";
+import DeleteRestaurant from "./DeleteRestaurant";
 import InstallApp from "@/components/InstallApp";
 
 export const metadata = { title: "Admin", robots: { index: false } };
@@ -39,7 +40,7 @@ export default async function Admin() {
           <td className="mono">{r.guests}</td><td className="mono">{r.week}</td><td className="mono">{r.redeemed}</td>
           <td style={{ whiteSpace: "nowrap" }}>{r.last_guest ? fmtDate(r.last_guest) : "None yet"}</td>
           <td style={{ whiteSpace: "nowrap" }}>{fmtDate(r.created_at)}</td>
-          <td><Link className="btn ghost sm" href={`/app/${r.slug}`}>Open</Link></td></tr>))}
+          <td><div className="row" style={{ gap: 8, flexWrap: "nowrap", alignItems: "flex-start" }}><Link className="btn ghost sm" href={`/app/${r.slug}`}>Open</Link><DeleteRestaurant slug={r.slug} name={r.name} /></div></td></tr>))}
       </tbody></table></div>
       : <div className="empty"><p className="t3" style={{ color: "var(--fg)" }}>No restaurants yet</p><p className="c2">Add your first one below after the owner agrees to a pilot.</p></div>}
     </div>
