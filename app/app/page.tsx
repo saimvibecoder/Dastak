@@ -11,7 +11,8 @@ export default async function AppHome() {
     sb.from("restaurants").select("slug,name,area").order("name"),
     sb.from("admins").select("user_id").eq("user_id", user.id).maybeSingle(),
   ]);
-  if (rs?.length === 1 && !adm) redirect(`/app/${rs[0].slug}`);
+  if (adm) redirect("/admin");
+  if (rs?.length === 1) redirect(`/app/${rs[0].slug}`);
   return (<><Nav current="app" signedIn /><main id="main" className="wrap app">
     <div className="apphead"><div><div className="c2">{user.email}</div><h1>Your restaurants</h1></div>
       <div className="row">{adm && <Link className="btn pri sm" href="/admin">Add a restaurant</Link>}
