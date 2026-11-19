@@ -7,6 +7,7 @@ export default function LoginForm() {
   const [code, setCode] = useState("");
   const [step, setStep] = useState<"email" | "code" | "password">("email");
   const [pw, setPw] = useState("");
+  const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
 
@@ -45,7 +46,8 @@ export default function LoginForm() {
   if (step === "password") return (
     <form className="stackform" onSubmit={withPassword} noValidate>
       <div className="field"><label htmlFor="pem">Email</label><input className="inp" id="pem" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} /></div>
-      <div className="field"><label htmlFor="ppw">Password</label><input className={`inp ${err ? "bad" : ""}`} id="ppw" type="password" autoComplete="current-password" value={pw} onChange={(e) => setPw(e.target.value)} />
+      <div className="field"><label htmlFor="ppw">Password</label><div className="row" style={{ flexWrap: "nowrap" }}><input className={`inp ${err ? "bad" : ""}`} id="ppw" type={show ? "text" : "password"} autoComplete="current-password" value={pw} onChange={(e) => setPw(e.target.value)} />
+          <button type="button" className="btn ghost sm" onClick={() => setShow(!show)} aria-pressed={show}>{show ? "Hide" : "Show"}</button></div>
         <div className="err" role="alert">{err}</div></div>
       <button className="btn pri" type="submit" disabled={busy}>{busy ? "Checking" : "Log in"}</button>
       <button className="btn ghost" type="button" onClick={() => { setStep("email"); setErr(""); setPw(""); }}>Use an email code instead</button>
