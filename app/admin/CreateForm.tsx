@@ -8,8 +8,8 @@ export default function CreateForm() {
   const auto = (n: string) => n.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
   return (<form action={act} className="stackform" style={{ marginTop: 16 }}>
     <div className="field"><label htmlFor="cn">Restaurant name</label><input className="inp" id="cn" name="name" required value={name} onChange={(e) => { setName(e.target.value); if (!touched) setSlug(auto(e.target.value)); }} placeholder="Kebab Kothi" /></div>
-    <div className="field"><label htmlFor="cs">Web address</label><input className="inp mono" id="cs" name="slug" required value={slug} onChange={(e) => { setTouched(true); setSlug(e.target.value.toLowerCase()); }} placeholder="kebab-kothi" />
-      <span className="c5">Guests land on /r/{slug || "kebab-kothi"}/t/12</span></div>
+    <div className="field"><label htmlFor="cs">Dastak link name <span className="c5">(made for you, no website needed)</span></label><input className="inp mono" id="cs" name="slug" required value={slug} onChange={(e) => { setTouched(true); setSlug(e.target.value.toLowerCase()); }} placeholder="kebab-kothi" />
+      <span className="c5">Their QR codes open dastak.food/r/{slug || "kebab-kothi"}/t/12. The restaurant doesn&apos;t need its own website.</span></div>
     <div className="field"><label htmlFor="ca">Area</label><input className="inp" id="ca" name="area" placeholder="Aminabad" /></div>
     <div className="field"><label htmlFor="co">Free offer</label><input className="inp" id="co" name="offer" required defaultValue="free dish" placeholder="free dish" /></div>
     <div className="row" style={{ alignItems: "flex-start" }}>

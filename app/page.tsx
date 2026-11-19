@@ -2,6 +2,7 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import Reveal from "@/components/Reveal";
 import Bars, { BarLabels } from "@/components/Bars";
+import DoorLogo from "@/components/DoorLogo";
 import Footer from "@/components/Footer";
 import { wa } from "@/lib/util";
 import { supabaseServer } from "@/lib/supabase/server";
@@ -28,6 +29,7 @@ export default async function Home() {
       <main id="main">
         <header className="hero">
           <div className="wrap">
+            <div className="hero-mark fu d1"><DoorLogo size={0.5} /></div>
             <span className="badge fu d1"><b></b>Built for restaurants in Lucknow</span>
             <h1 className="fu d2">Turn every diner into a <em>regular</em> on WhatsApp</h1>
             <p className="sub fu d3">A QR on every table offers a free dish. Guests leave their WhatsApp number to claim it, and you message them when Monday afternoons go quiet.</p>

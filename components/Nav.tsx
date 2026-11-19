@@ -1,9 +1,10 @@
 import Link from "next/link";
+import DoorLogo from "./DoorLogo";
 export function Logo() {
   return (
     <Link className="logo" href="/">
-      <i><svg width="14" height="14" viewBox="0 0 32 32" aria-hidden="true"><path d="M8 6h8a10 10 0 010 20H8z" fill="none" stroke="#fff" strokeWidth="4" /></svg></i>
-      <span>Dastak</span>
+      <DoorLogo size={0.18} />
+      <span className="lbl">Dastak</span>
     </Link>
   );
 }
