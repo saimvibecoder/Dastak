@@ -70,7 +70,7 @@ export default function ClaimForm({ slug, table, r }: { slug: string; table: num
       </div>
       <form className="gbody" onSubmit={submit} noValidate>
         <div className="field"><label htmlFor="gn">Your name</label>
-          <input className={`inp ${errs.name ? "bad" : ""}`} id="gn" autoComplete="name" value={f.name} maxLength={60} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="Sana Rizvi" />
+          <input className={`inp ${errs.name ? "bad" : ""}`} id="gn" autoComplete="name" value={f.name} maxLength={60} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="Full name" />
           <div className="err">{errs.name}</div></div>
         <div className="field"><label htmlFor="gp">WhatsApp number</label>
           <div className="row" style={{ flexWrap: "nowrap" }}><span className="inp" style={{ width: "auto", flex: "none" }}>+91</span>

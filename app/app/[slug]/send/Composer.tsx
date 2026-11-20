@@ -21,7 +21,7 @@ export default function Composer({ slug, r, stopUrl, slot, startTpl, guests, pas
   const month = new Date().getMonth() + 1, week = Date.now() - 7 * 864e5, old = Date.now() - 30 * 864e5;
   const pick = (k: string) => k === "bday" ? guests.filter((g) => g.bm === month) : k === "lapsed" ? guests.filter((g) => !g.recent && g.joined < old) : k === "new" ? guests.filter((g) => g.joined > week) : guests;
   const list = pick(aud);
-  const full = (g?: G) => `${msg.replace(/\{name\}/g, g ? firstName(g.name) : "Sana")}${g ? `\n\nYour guest code: ${g.code}` : ""}\n\nTo stop offers: ${stopUrl}`;
+  const full = (g?: G) => `${msg.replace(/\{name\}/g, g ? firstName(g.name) : "there")}${g ? `\n\nYour guest code: ${g.code}` : ""}\n\nTo stop offers: ${stopUrl}`;
   const broadcastText = `${msg.replace(/\{name\}/g, "there").replace(/^Hi there,/, "Hi,")}\n\nTo stop offers: ${stopUrl}`;
   const copy = (txt: string, ok: string) => navigator.clipboard.writeText(txt).then(() => { setNote(ok); return true; }, () => { setNote("Copy was blocked. Select the text and copy it by hand."); return false; });
   const audLabel = AUD.find((a) => a[0] === aud)![1];
