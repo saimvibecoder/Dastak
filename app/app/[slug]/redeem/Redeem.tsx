@@ -21,14 +21,14 @@ export default function Redeem({ slug, prefix, offer }: { slug: string; prefix: 
     <div style={{ marginTop: 16, display: "grid", gap: 12 }} aria-live="polite">
       {err && <p className="err" style={{ fontSize: 14 }}>{err}</p>}
       {g && <div className="row"><div className="sp"><div className="t3">{g.name} <span className="chip mono">{g.code}</span></div>
-        <div className="c5">{g.table_no ? `Table ${g.table_no} · ` : ""}joined {fmtDate(g.created_at)}{g.redeemed_at ? ` · ${offer} served ${fmtDate(g.redeemed_at)}` : ""}</div></div></div>}
-      {g && !g.redeemed_at && <div className="choice"><div className="sp"><div className="t3">First visit: serve the {offer}</div><div className="c5">One tap marks the code as used.</div></div>
+        <div className="c5">{g.table_no ? `Table ${g.table_no} · ` : ""}joined {fmtDate(g.created_at)}{g.redeemed_at ? ` · welcome offer used ${fmtDate(g.redeemed_at)}` : ""}</div></div></div>}
+      {g && !g.redeemed_at && <div className="choice"><div className="sp"><div className="t3">First visit: give the welcome offer ({offer})</div><div className="c5">One tap marks the code as used.</div></div>
         <button className="btn pri sm" disabled={pending} onClick={() => start(async () => { await setRedeemed(slug, g.id, true); clear(`Marked as used. Enjoy the meal, ${firstName(g.name)}.`); })}>Mark redeemed</button></div>}
       {g && g.redeemed_at && <div className="choice"><div className="sp"><div className="t3">Came back{hit?.campaign ? ` for “${hit.campaign.name}”` : ""}?</div>
           <div className="c5">{hit?.lastReturn && sameDay(hit.lastReturn) ? "Already logged today." : hit?.campaign ? `Offer sent ${fmtDate(hit.campaign.created_at)}. Logging it shows on the dashboard.` : "Log a return visit so it counts on the dashboard."}</div></div>
         <button className="btn pri sm" disabled={pending || (!!hit?.lastReturn && sameDay(hit.lastReturn))} onClick={() => start(async () => {
           const res = await logReturn(slug, g.id, hit?.campaign?.id ?? null); if (res.error) setErr(res.error); else clear(`Welcome back, ${firstName(g.name)}. Return visit logged.`); })}>Log return visit</button></div>}
-      {g && g.redeemed_at && <p className="c5">The first-visit {offer} was already used, so politely decline a second one unless an offer says otherwise.</p>}
+      {g && g.redeemed_at && <p className="c5">The welcome offer ({offer}) was already used, so politely decline it a second time unless a newer offer says otherwise.</p>}
       {ok && <p className="notice ok">{ok}</p>}
     </div></div>);
 }

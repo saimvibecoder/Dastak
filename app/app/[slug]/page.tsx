@@ -59,6 +59,7 @@ export default async function Overview({ params }: { params: Promise<{ slug: str
       <Heatmap slug={slug} cells={(heat ?? []) as { dow: number; hr: number; n: number }[]} />
     </div>
     {funnel}
+    {role === "owner" && <p className="c5" style={{ marginTop: 16, textAlign: "center" }}>Your guest list belongs to you. <Link href={`/app/${slug}/guests/export`} prefetch={false}>Export it anytime</Link>. If you leave Dastak, it is deleted.</p>}
     <div className="card" style={{ marginTop: 16 }}><div className="row"><span className="t3">Latest guests</span><span className="sp"></span><Link className="btn ghost sm" href={`/app/${slug}/guests`}>See all</Link></div>
       <div style={{ marginTop: 8 }}>{(latest ?? []).map((g) => (
         <div className="qitem" key={g.id}><span className="av">{initials(g.name)}</span><div className="sp"><div className="t3 b6">{g.name}</div><div className="c5">{g.table_no ? `Table ${g.table_no} · ` : ""}{fmtDate(g.created_at)}</div></div>

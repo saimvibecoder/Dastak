@@ -6,11 +6,12 @@ import { getPublicRestaurant } from "@/lib/public";
 import { supabaseService } from "@/lib/supabase/admin";
 import { ipHash } from "@/lib/guard";
 import ClaimForm from "./ClaimForm";
+import { offerHeadline } from "@/lib/offer";
 
 type P = { params: Promise<{ slug: string; table: string }> };
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const { slug } = await params; const r = await getPublicRestaurant(slug);
-  const title = r ? (r.card_style === "premium" ? `${r.name}: guest list` : `${r.name}: ${r.offer}`) : "Offer";
+  const title = r ? (r.card_style === "premium" ? `${r.name}: guest list` : `${r.name}: welcome offer`) : "Offer";
   return { title, robots: { index: false } };
 }
 export default async function TablePage({ params }: P) {
@@ -27,7 +28,7 @@ export default async function TablePage({ params }: P) {
   return (
     <div className="gwrap" data-pal={r.palette}>
       <main id="main" className="guest" style={{ paddingTop: 32 }}>
-        <ClaimForm slug={slug} table={tableNo} r={{ name: r.name, area: r.area, offer: r.offer, whatsapp: r.whatsapp, premium: r.card_style === "premium" }} />
+        <ClaimForm slug={slug} table={tableNo} r={{ name: r.name, area: r.area, offer: r.offer, offerType: r.offer_type, whatsapp: r.whatsapp, premium: r.card_style === "premium" }} />
         <p className="c5" style={{ textAlign: "center", marginTop: 16 }}>By joining you agree to hear from {r.name} on WhatsApp. <a href={`/r/${slug}/stop`}>Leave the list</a> any time. Powered by Dastak · <a href="/privacy">Privacy</a></p>
       </main>
     </div>

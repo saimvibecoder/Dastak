@@ -3,6 +3,7 @@ import QRCode from "qrcode";
 import { requireRestaurant } from "@/lib/data";
 import { origin } from "@/lib/host";
 import PrintButton from "./PrintButton";
+import { asOfferType, offerHeadline, offerLine } from "@/lib/offer";
 
 export const metadata = { title: "Table cards" };
 export default async function QR({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ style?: string }> }) {
@@ -16,17 +17,17 @@ export default async function QR({ params, searchParams }: { params: Promise<{ s
   return (<div className="card">
     <div className="row noprint"><span className="t3">Table cards · {r.tables} tables</span><span className="sp"></span>
       <div className="row" style={{ gap: 8 }} role="group" aria-label="Card design">
-        <Link className={`btn ghost sm ${!premium ? "on" : ""}`} aria-pressed={!premium} href={`/app/${slug}/qr?style=free`}>Free dish card</Link>
+        <Link className={`btn ghost sm ${!premium ? "on" : ""}`} aria-pressed={!premium} href={`/app/${slug}/qr?style=free`}>Welcome offer card</Link>
         <Link className={`btn ghost sm ${premium ? "on" : ""}`} aria-pressed={premium} href={`/app/${slug}/qr?style=premium`}>Premium card</Link>
       </div><PrintButton /></div>
     <p className="c5 noprint" style={{ marginTop: 8 }}>{premium
-      ? "Premium card: no “free dish” wording. Guests join the guest list for private offers; set the guest page to match in Settings."
-      : `Free dish card: guests scan for a ${r.offer}.`} Prints two cards per A4 page. Each code opens {site}/r/{slug}/t/table number.</p>
+      ? "Premium card: no offer in the headline. Guests join the guest list for private offers; set the guest page to match in Settings."
+      : `Welcome offer card: guests scan for ${offerLine(asOfferType(r.offer_type), r.offer)}.`} Prints two cards per A4 page. Each code opens {site}/r/{slug}/t/table number.</p>
     <div className="tcards" style={{ marginTop: 16 }}>{cards.map((c) => (
       <div className={`tcard ${premium ? "prem" : ""}`} key={c.n}>
         <div className="tc-eyebrow">{r.name}</div>
-        <div className="tc-h">{premium ? <>Join our<br /><em>guest list</em></> : <>A {r.offer},<br /><em>on us</em></>}</div>
-        <div className="tc-sub">{premium ? "Private offers and first tastings, on WhatsApp" : "Scan to claim it with this meal"}</div>
+        <div className="tc-h">{premium ? <>Join our<br /><em>guest list</em></> : <><span className="tc-kicker">Your welcome offer</span>{offerHeadline(asOfferType(r.offer_type), r.offer)}</>}</div>
+        <div className="tc-sub">{premium ? "Private offers and first tastings, on WhatsApp" : "Join our guest list to claim it with this meal"}</div>
         <div className="tc-qr" dangerouslySetInnerHTML={{ __html: c.svg }} aria-label={`QR code for table ${c.n}`} role="img" />
         <div className="tc-hint">Point your phone camera here</div>
         <div className="tc-foot"><span>Table {c.n}</span><span>Powered by Dastak</span></div>

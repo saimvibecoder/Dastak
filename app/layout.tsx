@@ -9,7 +9,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: { default: "Dastak for restaurants", template: "%s · Dastak" },
-  description: "Dastak turns every table into a WhatsApp guest list. Diners scan a QR for a free dish, join your list, and come back when you message them.",
+  description: "Dastak turns every table into a WhatsApp guest list. Diners scan a QR for a welcome offer, join your list, and come back when you message them.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   openGraph: { title: "Dastak for restaurants", description: "Turn every diner into a regular on WhatsApp." },
   icons: { icon: "/icon.svg", apple: "/apple-touch-icon.png" },

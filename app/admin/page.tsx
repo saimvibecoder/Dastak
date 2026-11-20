@@ -11,7 +11,7 @@ import InstallApp from "@/components/InstallApp";
 
 export const metadata = { title: "Admin", robots: { index: false } };
 type Row = { slug: string; name: string; area: string | null; created_at: string; scans: number; guests: number; week: number; redeemed: number; sent: number; returned: number; last_guest: string | null; owners: string | null; invited: string | null;
-  plan: string; setup_price: number | null; monthly_price: number | null; plan_note: string | null; last_draft: string | null };
+  plan: string; setup_price: number | null; monthly_price: number | null; plan_note: string | null; last_draft: string | null; delete_requested_at: string | null };
 
 export default async function Admin() {
   const { sb, user } = await requireUser();
@@ -48,7 +48,7 @@ export default async function Admin() {
       <div className="row"><span className="t3">Onboarded restaurants</span><span className="sp"></span><a className="btn ghost sm" href="#add">Add a restaurant</a></div>
       {rs.length ? <div className="scroll" style={{ marginTop: 8 }}><table className="stack"><thead><tr><th>Restaurant</th><th>Plan</th><th>Owner</th><th>Scans</th><th>Sign-ups</th><th>Redeemed</th><th>Offers sent</th><th>Came back</th><th>Last guest</th><th></th></tr></thead><tbody>
         {rs.map((r) => (<tr key={r.slug}>
-          <td><b className="t3">{r.name}</b><div className="c5">{r.area ? `${r.area} · ` : ""}/{r.slug}</div></td>
+          <td><b className="t3">{r.name}</b>{r.delete_requested_at && <div><span className="chip wn">Owner asked to delete data {fmtDate(r.delete_requested_at)}</span></div>}<div className="c5">{r.area ? `${r.area} · ` : ""}/{r.slug}</div></td>
           <td><PlanEditor slug={r.slug} plan={r.plan ?? "pilot"} setup={r.setup_price} monthly={r.monthly_price} note={r.plan_note} />{r.plan_note && <div className="c5" style={{ marginTop: 4 }}>{r.plan_note}</div>}</td>
           <td>{r.owners ? <span className="chip ok">{r.owners}</span> : r.invited ? <span className="chip wn">Invited: {r.invited}</span> : <span className="chip">No owner yet</span>}</td>
           <td className="mono">{r.scans ?? 0}</td><td className="mono">{r.guests}<div className="c5">{pc(r.guests, r.scans ?? 0)}</div></td>

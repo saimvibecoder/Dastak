@@ -11,8 +11,9 @@ const FAQ: [string, string][] = [
   ["Do guests need to download an app?", "No. The phone camera reads the QR and opens a web page. Claiming takes about twenty seconds."],
   ["Is it allowed to message guests on WhatsApp?", "Only guests who tick the consent box are added. Every offer tells them how to leave the list, and they are removed when they ask."],
   ["Does it send messages automatically?", "Today you tap send for each guest, or copy the numbers into a WhatsApp Business broadcast list. Fully automatic sending through the WhatsApp Business API can be added later; Meta charges for each marketing message."],
-  ["Who owns the guest list?", "Your restaurant. You can copy the full list at any time and take it with you."],
-  ["What do I need at the restaurant?", "A phone with WhatsApp Business and printed QR cards for your tables. We design the cards with your name and offer."],
+  ["Who owns the guest list?", "Your guest list belongs to you. Export it anytime. If you leave Dastak, it is deleted."],
+  ["Could my WhatsApp number get blocked?", "Offers go out from a separate WhatsApp number for Dastak, never your main business line, so your regular number is never at risk. Only guests who opted in get messages, and every message has a one-tap way to leave."],
+  ["What do I need at the restaurant?", "A separate WhatsApp Business number for Dastak offers, on a phone or linked to WhatsApp Web, and printed QR cards for your tables. We design the cards with your name and welcome offer."],
   ["Can my staff use it too?", "Yes. Invite them by email. Staff can check codes and send offers; only owners change settings or remove guests."],
   ["How much does Dastak cost?", "A one time setup fee plus a small monthly fee, quoted after we see your tables and menu."],
 ];
@@ -31,13 +32,13 @@ export default async function Home() {
           <div className="wrap">
             <div className="hero-mark fu d1"><DoorLogo size={0.5} /></div>
             <span className="badge fu d1"><b></b>Built for restaurants in Lucknow</span>
-            <h1 className="fu d2">Turn every diner into a <em>regular</em> on WhatsApp</h1>
-            <p className="sub fu d3">A QR on every table offers a free dish. Guests leave their WhatsApp number to claim it, and you message them when Monday afternoons go quiet.</p>
+            <h1 className="fu d2">Fill your <em>slow</em> afternoons with guests who&apos;ve eaten with you before</h1>
+            <p className="sub fu d3">A QR on every table gives guests a welcome offer for joining your WhatsApp guest list. When the dining room goes quiet, you invite them back.</p>
             <div className="ctas fu d4">
               <a className="btn pri" href={book} target="_blank" rel="noopener">Book a free walkthrough</a>
               <a className="btn ghost" href="#how"><span className="play"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1l7 4-7 4z" fill="currentColor" /></svg></span>See how it works</a>
             </div>
-            <p className="c2 proof fu d5">No app for your guests. No card machine changes. Your list stays yours.</p>
+            <p className="c2 proof fu d5">Offers go out from a separate WhatsApp number for Dastak, never your main business line. Your list stays yours.</p>
             <div className="pv fu d5">
               <div className="glass">
                 <div className="pvin">
@@ -63,8 +64,8 @@ export default async function Home() {
         <section className="band" id="how"><div className="wrap">
           <div className="sec-h rv"><h2>Four steps from table to <em>return</em> visit</h2><p>Everything runs on the phones your guests and staff already carry.</p></div>
           <div className="grid g4">
-            {[["Guest scans the table card", "A branded QR card offers a free dish. The phone camera opens your offer page."],
-              ["They claim the dish", "Name, WhatsApp number, birthday if they like, and a consent tick. They get a code to show the server."],
+            {[["Guest scans the table card", "A branded QR card shows your welcome offer. The phone camera opens your guest page."],
+              ["They join and claim it", "Name, WhatsApp number, birthday if they like, and a consent tick. They get a pass with a code to show the server."],
               ["Your list grows daily", "Every claim lands in your dashboard with the table, visit time and whether the code was used."],
               ["You fill the quiet hours", "See which slot is emptiest, pick a ready offer, and send it to your guests on WhatsApp."]].map(([t, p], i) => (
               <div className="card step rv" key={t}><div className="num">Step {i + 1}</div><h3>{t}</h3><p>{p}</p></div>
@@ -105,7 +106,7 @@ export default async function Home() {
         <section className="band" style={{ paddingTop: 0 }}><div className="wrap">
           <div className="final rv">
             <h2>See it running on your <em>own</em> tables</h2>
-            <p className="c2" style={{ margin: "16px auto 32px", maxWidth: 520 }}>A short visit: we look at your tables and menu, pick the free dish, and set up the dashboard with your restaurant&apos;s name on it.</p>
+            <p className="c2" style={{ margin: "16px auto 32px", maxWidth: 520 }}>A short visit: we look at your tables and menu, pick your welcome offer, and set up the dashboard with your restaurant&apos;s name on it.</p>
             <div className="ctas" style={{ marginTop: 0 }}><a className="btn pri" href={book} target="_blank" rel="noopener">Book a free walkthrough</a><Link className="btn ghost" href="/login">Owner log in</Link></div>
           </div>
         </div></section>

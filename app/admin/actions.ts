@@ -6,7 +6,7 @@ import { requireUser } from "@/lib/data";
 import { ensureAccount } from "@/lib/accounts";
 
 const In = z.object({
-  name: z.string().trim().min(2).max(60), area: z.string().trim().max(60), offer: z.string().trim().min(3).max(80),
+  name: z.string().trim().min(2).max(60), area: z.string().trim().max(60), offer: z.string().trim().transform((v) => v.replace(/^free\s+/i, "")).pipe(z.string().min(3).max(80)),
   slug: z.string().regex(/^[a-z0-9-]{3,40}$/), prefix: z.string().trim().toUpperCase().regex(/^[A-Z]{2,4}$/),
   tables: z.coerce.number().int().min(1).max(200), email: z.string().trim().toLowerCase().email(),
 });

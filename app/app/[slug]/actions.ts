@@ -72,7 +72,8 @@ export async function countSent(slug: string, id: string, sent: number) {
 }
 
 const Settings = z.object({
-  name: z.string().trim().min(2).max(60), area: z.string().trim().max(60), offer: z.string().trim().min(3).max(80),
+  name: z.string().trim().min(2).max(60), area: z.string().trim().max(60), offer: z.string().trim().min(1).max(80),
+  offer_type: z.enum(["dish", "drink", "bite", "dessert", "percent"]),
   whatsapp: z.string().trim().regex(/^(\d{10,15})?$/), tables: z.coerce.number().int().min(1).max(200), palette: z.string(),
   card_style: z.enum(["free", "premium"]),
 });
@@ -83,6 +84,8 @@ export async function saveSettings(slug: string, _: unknown, fd: FormData) {
   if (/^\d{10}$/.test(String(raw.whatsapp))) raw.whatsapp = "91" + raw.whatsapp;
   const p = Settings.safeParse(raw);
   if (!p.success || !isPalette(p.data.palette)) return { error: "Check the fields: name, offer, a WhatsApp number with country code, and 1 to 200 tables." };
+  if (p.data.offer_type === "percent" && !/^([5-9]|[1-4]\d|50)$/.test(p.data.offer)) return { error: "For % off, enter a number from 5 to 50." };
+  if (p.data.offer_type !== "percent" && p.data.offer.length < 3) return { error: "Name the welcome offer, for example masala chai." };
   const { error } = await sb.from("restaurants").update({ ...p.data, area: p.data.area || null, whatsapp: p.data.whatsapp || null }).eq("id", r.id);
   done(slug); return error ? { error: "Couldn't save. Try again." } : { ok: "Settings saved." };
 }
@@ -127,4 +130,12 @@ export async function markDraftUsed(slug: string, id: string) {
   const { sb, r } = await requireRestaurant(slug);
   await sb.from("offer_drafts").update({ used_at: new Date().toISOString() }).eq("id", uuid.parse(id)).eq("restaurant_id", r.id).is("used_at", null);
   done(slug);
+}
+
+/** Owner asks Dastak to delete all of the restaurant's data. Dastak confirms and deletes it from the admin page. */
+export async function requestDeletion(slug: string) {
+  const { sb, role } = await requireRestaurant(slug);
+  if (role !== "owner") return { error: "Only owners can ask for this." };
+  const { error } = await sb.rpc("request_data_deletion", { p_slug: slug });
+  done(slug); return error ? { error: "Couldn't send the request. Try again, or message Dastak on WhatsApp." } : { ok: true };
 }

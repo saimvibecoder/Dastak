@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     p_bday_d: d ? d.getDate() : null, p_bday_m: d ? d.getMonth() + 1 : null, p_ip: ipHash(req),
   });
   if (error) return NextResponse.json({ error: "We couldn't save that just now. Try again in a moment." }, { status: 500 });
-  // A guest who left the list earlier can join again: same code, offers switched back on, no second free dish.
+  // A guest who left the list earlier can join again: same code, offers switched back on, no second welcome offer.
   if (data?.error === "exists") {
     const sb = supabaseService();
     const { data: r } = await sb.from("restaurants").select("id,name,whatsapp,offer").eq("slug", b.slug).maybeSingle();

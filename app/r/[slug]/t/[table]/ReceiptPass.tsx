@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
+import { offerShort, type OfferType } from "@/lib/offer";
 
 type Stage = "processing" | "printing" | "complete";
 const LABEL: Record<Stage, string> = { processing: "Checking your table", printing: "Printing your pass", complete: "Your pass is ready" };
 
 /** A small receipt printer that prints the guest's pass. Static for reduced motion or a restored pass. */
-export default function ReceiptPass({ restaurant, area, table, offer, code, at, fresh, used = false }: {
-  restaurant: string; area: string | null; table: number | null; offer: string; code: string; at: number; fresh: boolean; used?: boolean;
+export default function ReceiptPass({ restaurant, area, table, offer, offerType, code, at, fresh, used = false }: {
+  restaurant: string; area: string | null; table: number | null; offer: string; offerType: OfferType; code: string; at: number; fresh: boolean; used?: boolean;
 }) {
   const [stage, setStage] = useState<Stage>(fresh ? "processing" : "complete");
   useEffect(() => {
@@ -39,7 +40,8 @@ export default function ReceiptPass({ restaurant, area, table, offer, code, at, 
           <div className="rp-row"><span>{date}</span><span>{time}</span></div>
           <div className="rp-row"><span>{table ? `TABLE ${table}` : "GUEST PASS"}</span><span>{used ? "WELCOME BACK" : "WELCOME"}</span></div>
           <div className="rp-rule" />
-          <div className="rp-row"><span>1 x {offer}</span><span>{used ? "USED" : "FREE"}</span></div>
+          <div className="rp-center rp-small">WELCOME OFFER</div>
+          <div className="rp-row"><span>{offerType === "percent" ? `${offerShort(offerType, offer)} your bill` : `1 x ${offer}`}</span><span>{used ? "USED" : offerType === "percent" ? "WELCOME" : "ON THE HOUSE"}</span></div>
           <div className="rp-rule" />
           <div className="rp-center rp-small">YOUR CODE</div>
           <div className="rp-code">{code}</div>

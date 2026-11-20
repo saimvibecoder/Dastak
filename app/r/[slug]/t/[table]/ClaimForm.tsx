@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import { wa, firstName } from "@/lib/util";
 import ReceiptPass from "./ReceiptPass";
+import { offerHeadline, offerLine, offerShort, type OfferType } from "@/lib/offer";
 
-type R = { name: string; area: string | null; offer: string; whatsapp: string | null; premium: boolean };
+type R = { name: string; area: string | null; offer: string; offerType: OfferType; whatsapp: string | null; premium: boolean };
 type Pass = { code: string; at: number; table: number | null; fresh?: boolean; used?: boolean; back?: boolean };
 const when = (t: number) => new Date(t).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" });
 
@@ -22,7 +23,7 @@ export default function ClaimForm({ slug, table, r }: { slug: string; table: num
     try { await navigator.clipboard.writeText(done.code); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { setCopied(false); }
   }
   const where = [r.name, r.area].filter(Boolean).join(" · ") + (table ? ` · Table ${table}` : "");
-  const gift = r.premium ? `a welcome ${r.offer}` : `your ${r.offer}`;
+  const gift = `your welcome offer: ${offerLine(r.offerType, r.offer)}`;
 
   async function submit(e: React.FormEvent) {
     e.preventDefault(); setServer("");
@@ -30,7 +31,7 @@ export default function ClaimForm({ slug, table, r }: { slug: string; table: num
     const er: Record<string, string> = {};
     if (f.name.trim().length < 2) er.name = "Enter your name so the server can greet you.";
     if (!/^[6-9]\d{9}$/.test(phone)) er.phone = "Enter a 10 digit Indian mobile number.";
-    if (!f.consent) er.consent = r.premium ? "Tick the box to join the guest list." : "Tick the box to join the list and claim the offer.";
+    if (!f.consent) er.consent = r.premium ? "Tick the box to join the guest list." : "Tick the box to join the list and claim your welcome offer.";
     setErrs(er); if (Object.keys(er).length) return;
     setBusy(true);
     const res = await fetch("/api/claim", { method: "POST", headers: { "content-type": "application/json" },
@@ -47,9 +48,9 @@ export default function ClaimForm({ slug, table, r }: { slug: string; table: num
     <div className="gcard">
       <div className="gtop"><div className="eyebrow">{done.back ? "Welcome back to the list" : r.premium ? "Welcome to the guest list" : "You're on the list"}</div>
         <h1 style={{ marginTop: 10 }}>{f.name.trim() ? `Thank you, ${firstName(f.name.trim())}` : "Thank you"}</h1>
-        <p>{done.used ? `You'll get ${r.name}'s offers on WhatsApp again. Your welcome ${r.offer} was already enjoyed on an earlier visit.` : `Show this pass to your server for ${gift}.`}</p></div>
+        <p>{done.used ? `You'll get ${r.name}'s offers on WhatsApp again. Your welcome offer was already used on an earlier visit.` : `Show this pass to your server for ${gift}.`}</p></div>
       <div className="gbody">
-        <ReceiptPass restaurant={r.name} area={r.area} table={done.table} offer={r.offer} code={done.code} at={done.at} fresh={!!done.fresh} used={!!done.used} />
+        <ReceiptPass restaurant={r.name} area={r.area} table={done.table} offer={r.offer} offerType={r.offerType} code={done.code} at={done.at} fresh={!!done.fresh} used={!!done.used} />
         <button type="button" className="btn" onClick={copy}>{copied ? "Copied" : "Copy code"}</button>
         <p className="c2" style={{ textAlign: "center" }} aria-live="polite">Take a screenshot to keep it handy. Scanning the table card again also brings your pass back.</p>
         {!done.fresh && <button type="button" className="c5" style={{ background: "none", border: 0, textDecoration: "underline", cursor: "pointer", font: "inherit" }}
@@ -66,7 +67,7 @@ export default function ClaimForm({ slug, table, r }: { slug: string; table: num
       <div className="gtop"><div className="eyebrow">{where}</div>
         {r.premium
           ? <><h1 style={{ marginTop: 10 }}>Join our guest list</h1><p>Private offers, first tastings and invitations from {r.name}, on WhatsApp.</p></>
-          : <><h1 style={{ marginTop: 10 }}>A {r.offer}, on us</h1><p>Join our guest list on WhatsApp and enjoy it with this meal.</p></>}
+          : <><h1 style={{ marginTop: 10 }}>{offerHeadline(r.offerType, r.offer)}</h1><p>Your welcome offer for joining our guest list on WhatsApp. Enjoy it with this meal.</p></>}
       </div>
       <form className="gbody" onSubmit={submit} noValidate>
         <div className="field"><label htmlFor="gn">Your name</label>
@@ -82,8 +83,8 @@ export default function ClaimForm({ slug, table, r }: { slug: string; table: num
         <label className="ck"><input type="checkbox" checked={f.consent} onChange={(e) => setF({ ...f, consent: e.target.checked })} /> <span>Send me offers from {r.name} on WhatsApp. I can leave the list any time.</span></label>
         <div className="err">{errs.consent}</div>
         {server && <p className="notice err" role="alert">{server}</p>}
-        <button className="btn pri" type="submit" disabled={busy}>{busy ? "Saving" : r.premium ? "Join the guest list" : `Claim my ${r.offer}`}</button>
-        {r.premium && <p className="c5" style={{ textAlign: "center" }}>Joining also gets you {gift} with this meal.</p>}
+        <button className="btn pri" type="submit" disabled={busy}>{busy ? "Saving" : r.premium ? "Join the guest list" : "Claim my welcome offer"}</button>
+        {r.premium && <p className="c5" style={{ textAlign: "center" }}>Joining also gets you a welcome offer with this meal: {offerShort(r.offerType, r.offer)}.</p>}
       </form>
     </div>
   );

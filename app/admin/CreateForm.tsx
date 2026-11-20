@@ -11,7 +11,7 @@ export default function CreateForm() {
     <div className="field"><label htmlFor="cs">Dastak link name <span className="c5">(made for you, no website needed)</span></label><input className="inp mono" id="cs" name="slug" required value={slug} onChange={(e) => { setTouched(true); setSlug(e.target.value.toLowerCase()); }} placeholder="kebab-kothi" />
       <span className="c5">Their QR codes open dastak.food/r/{slug || "kebab-kothi"}/t/12. The restaurant doesn&apos;t need its own website.</span></div>
     <div className="field"><label htmlFor="ca">Area</label><input className="inp" id="ca" name="area" placeholder="Aminabad" /></div>
-    <div className="field"><label htmlFor="co">Free offer</label><input className="inp" id="co" name="offer" required defaultValue="free dish" placeholder="free dish" /></div>
+    <div className="field"><label htmlFor="co">Welcome offer <span className="c5">(the item, e.g. masala chai. Set the type or a % in their Settings)</span></label><input className="inp" id="co" name="offer" required defaultValue="chef\u2019s special" placeholder="masala chai" /></div>
     <div className="row" style={{ alignItems: "flex-start" }}>
       <div className="field sp"><label htmlFor="cp">Code prefix</label><input className="inp mono" id="cp" name="prefix" required maxLength={4} placeholder="KK" /></div>
       <div className="field sp"><label htmlFor="ct">Tables</label><input className="inp" id="ct" name="tables" type="number" min={1} max={200} defaultValue={12} /></div></div>
