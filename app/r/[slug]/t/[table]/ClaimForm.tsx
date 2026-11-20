@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { wa, firstName } from "@/lib/util";
+import ReceiptPass from "./ReceiptPass";
 
 type R = { name: string; area: string | null; offer: string; whatsapp: string | null; premium: boolean };
-type Pass = { code: string; at: number; table: number | null };
+type Pass = { code: string; at: number; table: number | null; fresh?: boolean };
 const when = (t: number) => new Date(t).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" });
 
 export default function ClaimForm({ slug, table, r }: { slug: string; table: number | null; r: R }) {
@@ -38,7 +39,7 @@ export default function ClaimForm({ slug, table, r }: { slug: string; table: num
     const data = res ? await res.json().catch(() => ({})) : {};
     if (!res || !res.ok) { setServer(data.error || "No connection. Check your internet and try again."); return; }
     const pass = { code: data.code, at: Date.now(), table };
-    setDone(pass);
+    setDone({ ...pass, fresh: true });
     try { localStorage.setItem(key, JSON.stringify({ ...pass, name: f.name.trim() })); } catch {}
   }
 
@@ -48,11 +49,7 @@ export default function ClaimForm({ slug, table, r }: { slug: string; table: num
         <h1 style={{ marginTop: 10 }}>{f.name.trim() ? `Thank you, ${firstName(f.name.trim())}` : "Thank you"}</h1>
         <p>Show this pass to your server for {gift}.</p></div>
       <div className="gbody">
-        <div className="pass" aria-label={`Your pass for ${r.name}, code ${done.code}`}>
-          <div className="pass-h"><span>{r.name}</span><span>{done.table ? `Table ${done.table}` : "Guest pass"}</span></div>
-          <div className="pass-code mono">{done.code}</div>
-          <div className="pass-f"><span>{r.offer}</span><span>{when(done.at)}</span></div>
-        </div>
+        <ReceiptPass restaurant={r.name} area={r.area} table={done.table} offer={r.offer} code={done.code} at={done.at} fresh={!!done.fresh} />
         <button type="button" className="btn" onClick={copy}>{copied ? "Copied" : "Copy code"}</button>
         <p className="c2" style={{ textAlign: "center" }} aria-live="polite">Take a screenshot to keep it handy. Scanning the table card again also brings your pass back.</p>
         {r.whatsapp && <>

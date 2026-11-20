@@ -345,3 +345,38 @@ a.plain{text-decoration:none}
 .frate{margin-top:8px;font-size:12px;line-height:16px;font-weight:700;color:var(--accent)}
 @media (max-width:760px){.funnel{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .choice{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:var(--bg);box-shadow:var(--down,inset 0 1px 3px rgba(0,0,0,.08))}
+
+/* ---------- receipt printer pass (Nov 2026) ---------- */
+.rp{position:relative;display:flex;flex-direction:column;align-items:center;width:100%}
+.rp-machine{position:relative;z-index:2;width:100%;border-radius:24px;padding:12px 12px 30px;background:#2a1d16;box-shadow:0 20px 36px -20px rgba(28,18,12,.6),0 6px 14px -8px rgba(28,18,12,.3),inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.4);color:#f3e7d6}
+.rp-head{display:flex;align-items:center;justify-content:space-between;height:28px;padding:0 6px}
+.rp-brand{font-size:12px;line-height:16px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#d9b27c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rp-led{width:8px;height:8px;border-radius:50%;background:#e8a24e;box-shadow:0 0 8px #e8a24e}
+.rp[data-stage=complete] .rp-led{background:#7bd88f;box-shadow:0 0 8px #7bd88f}
+.rp-screen{margin-top:6px;border-radius:12px;background:#140d09;padding:14px 16px;box-shadow:inset 0 0 24px 4px rgba(0,0,0,.55)}
+.rp-status{display:flex;align-items:center;gap:10px;font-size:13px;line-height:16px;font-weight:600;color:#cdbba5}
+.rp[data-stage=complete] .rp-status{color:#f3e7d6}
+.rp-ico{display:grid;place-items:center;width:18px;height:18px;color:#7bd88f}
+.rp-spin{width:14px;height:14px;border-radius:50%;border:2px solid #5a4636;border-top-color:#e8a24e;animation:rpspin .8s linear infinite}
+.rp-label{animation:rpfade .2s cubic-bezier(.23,1,.32,1)}
+.rp-slot{position:absolute;left:24px;right:24px;bottom:12px;height:8px;border-radius:4px;background:#0b0705;box-shadow:inset 0 2px 3px rgba(0,0,0,.8)}
+.rp-out{position:relative;z-index:3;width:calc(100% - 48px);margin-top:-20px;overflow:hidden;padding-bottom:14px}
+.rp-out::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;z-index:2;background:rgba(11,7,5,.55);filter:blur(4px)}
+.rp-paper{position:relative;background:#fffdf8;color:#1c120c;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:18px;padding:26px 18px 30px;box-shadow:0 8px 24px rgba(28,18,12,.18);
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 6px),97.5% 100%,95% calc(100% - 6px),92.5% 100%,90% calc(100% - 6px),87.5% 100%,85% calc(100% - 6px),82.5% 100%,80% calc(100% - 6px),77.5% 100%,75% calc(100% - 6px),72.5% 100%,70% calc(100% - 6px),67.5% 100%,65% calc(100% - 6px),62.5% 100%,60% calc(100% - 6px),57.5% 100%,55% calc(100% - 6px),52.5% 100%,50% calc(100% - 6px),47.5% 100%,45% calc(100% - 6px),42.5% 100%,40% calc(100% - 6px),37.5% 100%,35% calc(100% - 6px),32.5% 100%,30% calc(100% - 6px),27.5% 100%,25% calc(100% - 6px),22.5% 100%,20% calc(100% - 6px),17.5% 100%,15% calc(100% - 6px),12.5% 100%,10% calc(100% - 6px),7.5% 100%,5% calc(100% - 6px),2.5% 100%,0 calc(100% - 6px));
+  transform:translateY(0);opacity:1}
+.rp[data-stage=processing] .rp-paper{opacity:0;transform:translateY(calc(-100% + 2px))}
+.rp[data-stage=printing] .rp-paper{animation:rpfeed 1.75s linear both}
+.rp-center{text-align:center}
+.rp-small{font-size:11px;line-height:16px;color:#6b5546}
+.rp-row{display:flex;justify-content:space-between;gap:12px}
+.rp-rule{margin:10px 0;border-top:1px dashed #b9a693}
+.rp-code{margin:6px 0;text-align:center;font-size:30px;line-height:36px;font-weight:800;letter-spacing:.12em}
+@keyframes rpspin{to{transform:rotate(360deg)}}
+@keyframes rpfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@keyframes rpfeed{
+  0%{transform:translateY(calc(-100% + 2px))}7.5%{transform:translateY(-91%)}10.5%{transform:translateY(-91%)}18%{transform:translateY(-81%)}21%{transform:translateY(-81%)}
+  28.5%{transform:translateY(-70%)}31.5%{transform:translateY(-70%)}39%{transform:translateY(-58%)}42%{transform:translateY(-58%)}49.5%{transform:translateY(-45%)}
+  52.5%{transform:translateY(-45%)}60%{transform:translateY(-32%)}63%{transform:translateY(-32%)}70.5%{transform:translateY(-20%)}73.5%{transform:translateY(-20%)}
+  81%{transform:translateY(-10%)}84%{transform:translateY(-10%)}91.5%{transform:translateY(-3%)}94.5%{transform:translateY(-3%)}100%{transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.rp .rp-paper{animation:none!important;opacity:1!important;transform:none!important}.rp-spin{animation:none}}
