@@ -24,7 +24,7 @@ export default async function Overview({ params }: { params: Promise<{ slug: str
       <Link className="btn pri sm" href={`/app/${slug}/send?draft=${od.id}`}>Review and send</Link></div>) : null;
   const f = (fn ?? { scans: 0, signups: 0, redeemed: 0, sent: 0, returned: 0 }) as Record<"scans" | "signups" | "redeemed" | "sent" | "returned", number>;
   const steps: [string, number, string][] = [
-    ["Scans", f.scans, "table card scans"], ["Sign-ups", f.signups, "joined the list"], ["Dishes redeemed", f.redeemed, "codes used at the table"],
+    ["Scans", f.scans, "table card scans"], ["Sign-ups", f.signups, "joined the list"], ["Welcome offers redeemed", f.redeemed, "codes used at the table"],
     ["Offers sent", f.sent, "WhatsApp messages"], ["Came back", f.returned, "guests back after an offer"]];
   const rate = (a: number, b: number) => (b ? `${Math.round((a / b) * 100)}%` : "–");
   const funnel = (<div className="card" style={{ marginTop: 16 }}><div className="row"><span className="t3">How Dastak is working</span><span className="sp"></span><span className="c5">All time</span></div>

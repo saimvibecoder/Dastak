@@ -30,7 +30,7 @@ export default async function Admin() {
     ["Restaurants", String(rs.length), `${paying.length} paying · ${rs.filter((r) => r.plan === "pilot").length} on pilot`],
     ["Monthly income", `₹${mrr.toLocaleString("en-IN")}`, "monthly plans, plus yearly ÷ 12"],
     ["Sign-ups", sum("guests").toLocaleString("en-IN"), `from ${sum("scans").toLocaleString("en-IN")} scans · ${sum("week")} this week`],
-    ["Dishes redeemed", sum("redeemed").toLocaleString("en-IN"), `${pc(sum("redeemed"), sum("guests"))} of sign-ups`],
+    ["Offers redeemed", sum("redeemed").toLocaleString("en-IN"), `${pc(sum("redeemed"), sum("guests"))} of sign-ups`],
     ["Offers sent", sum("sent").toLocaleString("en-IN"), "WhatsApp messages"],
     ["Came back", sum("returned").toLocaleString("en-IN"), `${pc(sum("returned"), sum("guests"))} of sign-ups`],
   ];
