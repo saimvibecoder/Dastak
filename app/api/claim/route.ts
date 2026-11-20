@@ -30,6 +30,16 @@ export async function POST(req: NextRequest) {
     p_bday_d: d ? d.getDate() : null, p_bday_m: d ? d.getMonth() + 1 : null, p_ip: ipHash(req),
   });
   if (error) return NextResponse.json({ error: "We couldn't save that just now. Try again in a moment." }, { status: 500 });
+  // A guest who left the list earlier can join again: same code, offers switched back on, no second free dish.
+  if (data?.error === "exists") {
+    const sb = supabaseService();
+    const { data: r } = await sb.from("restaurants").select("id,name,whatsapp,offer").eq("slug", b.slug).maybeSingle();
+    const { data: g } = r ? await sb.from("guests").select("id,code,redeemed_at,opted_out_at").eq("restaurant_id", r.id).eq("phone", b.phone).maybeSingle() : { data: null };
+    if (r && g?.opted_out_at) {
+      await sb.from("guests").update({ opted_out_at: null, consent_at: new Date().toISOString(), name: b.name }).eq("id", g.id);
+      return NextResponse.json({ code: g.code, whatsapp: r.whatsapp, name: r.name, offer: r.offer, rejoined: true, redeemed: !!g.redeemed_at });
+    }
+  }
   if (data?.error) return NextResponse.json({ error: MSG[data.error] ?? MSG.busy }, { status: data.error === "slow_down" ? 429 : 409 });
   return NextResponse.json({ code: data.code, whatsapp: data.whatsapp, name: data.name, offer: data.offer });
 }

@@ -4,7 +4,7 @@ import { wa, firstName } from "@/lib/util";
 import ReceiptPass from "./ReceiptPass";
 
 type R = { name: string; area: string | null; offer: string; whatsapp: string | null; premium: boolean };
-type Pass = { code: string; at: number; table: number | null; fresh?: boolean };
+type Pass = { code: string; at: number; table: number | null; fresh?: boolean; used?: boolean; back?: boolean };
 const when = (t: number) => new Date(t).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" });
 
 export default function ClaimForm({ slug, table, r }: { slug: string; table: number | null; r: R }) {
@@ -16,7 +16,7 @@ export default function ClaimForm({ slug, table, r }: { slug: string; table: num
   const [copied, setCopied] = useState(false);
   const key = `dastak:code:${slug}`;
   // If the guest scans again or reopens the page, show the pass they already got.
-  useEffect(() => { try { const v = JSON.parse(localStorage.getItem(key) || "null"); if (v?.code) { setDone({ code: v.code, at: v.at || Date.now(), table: v.table ?? null }); setF((x) => ({ ...x, name: v.name || x.name })); } } catch {} }, [key]);
+  useEffect(() => { try { const v = JSON.parse(localStorage.getItem(key) || "null"); if (v?.code) { setDone({ code: v.code, at: v.at || Date.now(), table: v.table ?? null, used: !!v.used, back: !!v.back }); setF((x) => ({ ...x, name: v.name || x.name })); } } catch {} }, [key]);
   async function copy() {
     if (!done) return;
     try { await navigator.clipboard.writeText(done.code); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { setCopied(false); }
@@ -38,20 +38,22 @@ export default function ClaimForm({ slug, table, r }: { slug: string; table: num
     setBusy(false);
     const data = res ? await res.json().catch(() => ({})) : {};
     if (!res || !res.ok) { setServer(data.error || "No connection. Check your internet and try again."); return; }
-    const pass = { code: data.code, at: Date.now(), table };
+    const pass = { code: data.code, at: Date.now(), table, used: !!data.redeemed, back: !!data.rejoined };
     setDone({ ...pass, fresh: true });
     try { localStorage.setItem(key, JSON.stringify({ ...pass, name: f.name.trim() })); } catch {}
   }
 
   if (done) return (
     <div className="gcard">
-      <div className="gtop"><div className="eyebrow">{r.premium ? "Welcome to the guest list" : "You're on the list"}</div>
+      <div className="gtop"><div className="eyebrow">{done.back ? "Welcome back to the list" : r.premium ? "Welcome to the guest list" : "You're on the list"}</div>
         <h1 style={{ marginTop: 10 }}>{f.name.trim() ? `Thank you, ${firstName(f.name.trim())}` : "Thank you"}</h1>
-        <p>Show this pass to your server for {gift}.</p></div>
+        <p>{done.used ? `You'll get ${r.name}'s offers on WhatsApp again. Your welcome ${r.offer} was already enjoyed on an earlier visit.` : `Show this pass to your server for ${gift}.`}</p></div>
       <div className="gbody">
-        <ReceiptPass restaurant={r.name} area={r.area} table={done.table} offer={r.offer} code={done.code} at={done.at} fresh={!!done.fresh} />
+        <ReceiptPass restaurant={r.name} area={r.area} table={done.table} offer={r.offer} code={done.code} at={done.at} fresh={!!done.fresh} used={!!done.used} />
         <button type="button" className="btn" onClick={copy}>{copied ? "Copied" : "Copy code"}</button>
         <p className="c2" style={{ textAlign: "center" }} aria-live="polite">Take a screenshot to keep it handy. Scanning the table card again also brings your pass back.</p>
+        {!done.fresh && <button type="button" className="c5" style={{ background: "none", border: 0, textDecoration: "underline", cursor: "pointer", font: "inherit" }}
+          onClick={() => { try { localStorage.removeItem(key); } catch {} setDone(null); setF({ name: "", phone: "", bday: "", consent: false, website: "" }); }}>Not you? Join with another number</button>}
         {r.whatsapp && <>
           <a className="btn wa" target="_blank" rel="noopener" href={wa(r.whatsapp, `Hi ${r.name}, I'm ${f.name.trim() || "a guest"}${done.table ? ` at table ${done.table}` : ""}. My code is ${done.code}.`)}>Save {r.name} on WhatsApp</a>
           <p className="c2" style={{ textAlign: "center" }}>Saving the chat means their offers reach you, not your spam folder.</p></>}
