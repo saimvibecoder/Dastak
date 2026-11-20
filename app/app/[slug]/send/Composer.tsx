@@ -1,13 +1,14 @@
 "use client";
 import { useMemo, useRef, useState } from "react";
 import { wa, firstName, phoneFmt, initials } from "@/lib/util";
-import { startCampaign, countSent } from "../actions";
+import { startCampaign, countSent, saveDraft, markDraftUsed } from "../actions";
 
 export type G = { id: string; name: string; phone: string; code: string; bm: number | null; joined: number; recent: boolean };
 type Past = { id: string; name: string; audience: string; sent: number; at: string };
 const AUD = [["all", "Everyone"], ["bday", "Birthdays this month"], ["lapsed", "Not visited in 30 days"], ["new", "Joined this week"]] as const;
 
-export default function Composer({ slug, r, stopUrl, slot, startTpl, guests, past }: { slug: string; r: { name: string; offer: string }; stopUrl: string; slot: string; startTpl: number; guests: G[]; past: Past[] }) {
+type Draft = { id: string; name: string; audience: string; message: string };
+export default function Composer({ slug, r, stopUrl, slot, startTpl, guests, past, draft, canDraft }: { slug: string; r: { name: string; offer: string }; stopUrl: string; slot: string; startTpl: number; guests: G[]; past: Past[]; draft: Draft | null; canDraft: boolean }) {
   const TPL = useMemo(() => [
     { n: "Slow weekday lunch", t: `Hi {name}, lunch is quiet at ${r.name} today. Come in between 12 and 3 PM and get 15% off your bill. Just show this message to your server.` },
     { n: "Quiet evening", t: `Hi {name}, we have tables free at ${r.name} this evening. Come in between 6 and 9 PM and dessert is on us. Just show this message to your server.` },
@@ -15,7 +16,9 @@ export default function Composer({ slug, r, stopUrl, slot, startTpl, guests, pas
     { n: "Birthday treat", t: `Happy birthday month, {name}! Your dessert at ${r.name} is on us any day this month. Just show this message to your server.` },
     { n: "Festival", t: `Festive greetings, {name}! Our festive menu is on at ${r.name} for three days. Reply here to reserve a table.` },
   ], [r]);
-  const [tpl, setTpl] = useState(startTpl); const [msg, setMsg] = useState(TPL[startTpl].t); const [aud, setAud] = useState<(typeof AUD)[number][0]>("all");
+  const [tpl, setTpl] = useState(draft ? -1 : startTpl); const [msg, setMsg] = useState(draft?.message ?? TPL[startTpl].t);
+  const [aud, setAud] = useState<(typeof AUD)[number][0]>((AUD.find((a) => a[0] === draft?.audience)?.[0]) ?? "all");
+  const offerName = tpl === -1 ? draft!.name : TPL[tpl].n; const draftUsed = useRef(false); const [drafting, setDrafting] = useState(false);
   const [sent, setSent] = useState<Record<string, true>>({}); const [note, setNote] = useState("");
   const camp = useRef<{ id: string; key: string } | null>(null);
   const month = new Date().getMonth() + 1, week = Date.now() - 7 * 864e5, old = Date.now() - 30 * 864e5;
@@ -30,9 +33,10 @@ export default function Composer({ slug, r, stopUrl, slot, startTpl, guests, pas
   async function record(total: number) {
     const key = `${tpl}|${aud}|${msg}`;
     if (!camp.current || camp.current.key !== key) {
-      const res = await startCampaign(slug, { name: TPL[tpl].n, audience: audLabel, message: msg });
+      const res = await startCampaign(slug, { name: offerName, audience: audLabel, message: msg });
       if ("error" in res) { setNote(res.error!); return; }
       camp.current = { id: res.id!, key };
+      if (draft && tpl === -1 && !draftUsed.current) { draftUsed.current = true; void markDraftUsed(slug, draft.id); }
     }
     await countSent(slug, camp.current.id, total);
   }
@@ -44,11 +48,16 @@ export default function Composer({ slug, r, stopUrl, slot, startTpl, guests, pas
   return (<>
     <div className="grid g2">
       <div className="card"><span className="t3">1. Pick an offer</span>
-        <div className="row" style={{ margin: "12px 0 16px", gap: 8 }}>{TPL.map((x, i) => <button key={x.n} className={`btn ghost sm ${i === tpl ? "on" : ""}`} aria-pressed={i === tpl} onClick={() => { setTpl(i); setMsg(x.t); reset(); }}>{x.n}</button>)}</div>
+        {draft && <p className="notice ok" style={{ marginTop: 12 }}>This week&apos;s offer from Dastak is loaded: <b>{draft.name}</b>. Check it, then send below.</p>}
+        <div className="row" style={{ margin: "12px 0 16px", gap: 8 }}>{draft && <button className={`btn ghost sm ${tpl === -1 ? "on" : ""}`} aria-pressed={tpl === -1} onClick={() => { setTpl(-1); setMsg(draft.message); reset(); }}>{draft.name}</button>}{TPL.map((x, i) => <button key={x.n} className={`btn ghost sm ${i === tpl ? "on" : ""}`} aria-pressed={i === tpl} onClick={() => { setTpl(i); setMsg(x.t); reset(); }}>{x.n}</button>)}</div>
         <div className="field"><label htmlFor="msg">Message <span className="c5">(edit the offer to suit you; {"{name}"} becomes each guest&apos;s first name)</span></label>
           <textarea className="inp" id="msg" value={msg} maxLength={900} onChange={(e) => { setMsg(e.target.value); reset(); }} /></div>
         <span className="t3" style={{ display: "block", marginTop: 24 }}>2. Choose who gets it</span>
         <div className="row" style={{ marginTop: 12, gap: 8 }}>{AUD.map(([k, l]) => <button key={k} className={`btn ghost sm ${k === aud ? "on" : ""}`} aria-pressed={k === aud} onClick={() => { setAud(k); reset(); }}>{l} · {pick(k).length}</button>)}</div>
+        {canDraft && <div className="row" style={{ marginTop: 16, gap: 8 }}><button className="btn sm" disabled={drafting} onClick={async () => { setDrafting(true);
+            const res = await saveDraft(slug, { name: offerName, audience: aud, message: msg }); setDrafting(false);
+            setNote(res.error ?? `Saved as this week's offer. ${r.name} will see it on their dashboard, ready to send.`); }}>{drafting ? "Saving" : "Save as this week's offer for the owner"}</button>
+          <span className="c5">Admin only: for done-for-you restaurants.</span></div>}
         {slot && <p className="c2" style={{ marginTop: 16 }}>Filling the slow slot: <b className="t3" style={{ color: "var(--fg)" }}>{slot}</b></p>}
       </div>
       <div className="card"><span className="t3">Preview</span><div className="phone" style={{ marginTop: 12 }}><div className="bubble">{full(list[0])}</div></div>

@@ -34,3 +34,21 @@ export async function deleteRestaurant(slug: string, typedName: string) {
   revalidatePath("/admin");
   return { ok: true };
 }
+
+const Plan = z.object({
+  slug: z.string().regex(/^[a-z0-9-]{3,40}$/),
+  plan: z.enum(["pilot", "standard", "done_for_you", "yearly", "paused"]),
+  setup: z.union([z.literal(""), z.coerce.number().int().min(0).max(10000000)]),
+  monthly: z.union([z.literal(""), z.coerce.number().int().min(0).max(10000000)]),
+  note: z.string().trim().max(200),
+}).strict();
+export async function setPlan(_: unknown, fd: FormData) {
+  const { sb } = await requireUser();
+  const p = Plan.safeParse(Object.fromEntries(fd));
+  if (!p.success) return { error: "Prices must be whole rupees, like 10000." };
+  const v = p.data;
+  const { error } = await sb.rpc("admin_set_plan", { p_slug: v.slug, p_plan: v.plan, p_setup: v.setup === "" ? null : v.setup, p_monthly: v.monthly === "" ? null : v.monthly, p_note: v.note });
+  if (error) return { error: "Couldn't save. Only admins can change plans." };
+  revalidatePath("/admin");
+  return { ok: "Saved" };
+}

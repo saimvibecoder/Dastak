@@ -112,3 +112,19 @@ export async function removeMember(slug: string, userId: string) {
   if (role !== "owner") return;
   await sb.from("members").delete().eq("restaurant_id", r.id).eq("user_id", uuid.parse(userId)); done(slug);
 }
+
+const Draft = z.object({ name: z.string().trim().min(1).max(60), audience: z.enum(["all", "bday", "lapsed", "new"]), message: z.string().trim().min(1).max(1000) });
+/** Admin only: leave this week's offer ready for the owner to send. */
+export async function saveDraft(slug: string, input: { name: string; audience: string; message: string }) {
+  const { sb, r, user, isAdmin } = await requireRestaurant(slug);
+  if (!isAdmin) return { error: "Only Dastak can leave drafts." };
+  const p = Draft.safeParse(input);
+  if (!p.success) return { error: "Write a message first." };
+  const { error } = await sb.from("offer_drafts").insert({ restaurant_id: r.id, ...p.data, created_by: user.id });
+  done(slug); return error ? { error: "Couldn't save the draft. Try again." } : { ok: true };
+}
+export async function markDraftUsed(slug: string, id: string) {
+  const { sb, r } = await requireRestaurant(slug);
+  await sb.from("offer_drafts").update({ used_at: new Date().toISOString() }).eq("id", uuid.parse(id)).eq("restaurant_id", r.id).is("used_at", null);
+  done(slug);
+}

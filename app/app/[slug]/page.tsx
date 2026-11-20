@@ -18,6 +18,10 @@ export default async function Overview({ params }: { params: Promise<{ slug: str
     sb.from("guests").select("id,name,table_no,created_at,redeemed_at,code").eq("restaurant_id", r.id).order("created_at", { ascending: false }).limit(5),
     sb.rpc("funnel", { rid: r.id }),
   ]);
+  const { data: od } = await sb.from("offer_drafts").select("id,name,created_at").eq("restaurant_id", r.id).is("used_at", null).order("created_at", { ascending: false }).limit(1).maybeSingle();
+  const ready = od ? (<div className="card nudge"><div className="sp"><div className="t3">Your offer for this week is ready: {od.name}</div>
+      <div className="c2">Written for you by Dastak. Check it and send it to your guests in a few taps.</div></div>
+      <Link className="btn pri sm" href={`/app/${slug}/send?draft=${od.id}`}>Review and send</Link></div>) : null;
   const f = (fn ?? { scans: 0, signups: 0, redeemed: 0, sent: 0, returned: 0 }) as Record<"scans" | "signups" | "redeemed" | "sent" | "returned", number>;
   const steps: [string, number, string][] = [
     ["Scans", f.scans, "table card scans"], ["Sign-ups", f.signups, "joined the list"], ["Dishes redeemed", f.redeemed, "codes used at the table"],
@@ -42,12 +46,12 @@ export default async function Overview({ params }: { params: Promise<{ slug: str
     ["Offers claimed", pct(s.redeemed), `${s.redeemed} codes used`], ["Came back", pct(s.repeat), `${s.repeat} repeat guests`]];
   const series = (days ?? []).map((d: { day: string; n: number }) => ({ label: fmtDate(d.day + "T12:00:00+05:30"), n: d.n }));
 
-  if (!s.all) return (<>{nudge}
+  if (!s.all) return (<>{ready}{nudge}
     <div className="card empty"><h2 style={{ fontSize: 30, lineHeight: "36px", color: "var(--fg)" }}>Your list starts at the <em>tables</em></h2>
       <p className="c2" style={{ margin: "12px auto 24px", maxWidth: 460 }}>Print the QR cards and put one on every table. The first guest who scans shows up here within seconds.</p>
       <Link className="btn pri" href={`/app/${slug}/qr`}>Get the table cards</Link></div>{funnel}</>);
 
-  return (<>{nudge}
+  return (<>{ready}{nudge}
     <div className="grid g4">{kpis.map(([l, n, d]) => <div className="card kpi" style={{ padding: 16 }} key={l}><div className="c5">{l}</div><div className="n mono">{n}</div><div className="d">{d}</div></div>)}</div>
     <div className="grid g2" style={{ marginTop: 16 }}>
       <div className="card"><div className="row"><span className="t3">New guests per day</span><span className="sp"></span><span className="c5">Last 14 days</span></div>
