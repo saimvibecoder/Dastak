@@ -10,9 +10,9 @@ const AUD = [["all", "Everyone"], ["bday", "Birthdays this month"], ["lapsed", "
 type Draft = { id: string; name: string; audience: string; message: string };
 export default function Composer({ slug, r, stopUrl, slot, startTpl, guests, past, draft, canDraft }: { slug: string; r: { name: string; offer: string }; stopUrl: string; slot: string; startTpl: number; guests: G[]; past: Past[]; draft: Draft | null; canDraft: boolean }) {
   const TPL = useMemo(() => [
-    { n: "Slow weekday lunch", t: `Hi {name}, lunch is quiet at ${r.name} today. Come in between 12 and 3 PM and get 15% off your bill. Just show this message to your server.` },
-    { n: "Quiet evening", t: `Hi {name}, we have tables free at ${r.name} this evening. Come in between 6 and 9 PM and dessert is on us. Just show this message to your server.` },
-    { n: "Come back this week", t: `Hi {name}, we'd love to see you again at ${r.name}. Visit any day this week and get 10% off your bill. Just show this message to your server.` },
+    { n: "Slow weekday lunch", t: `Hi {name}, a lunch treat for our guest list at ${r.name}: 15% off your bill today between 12 and 3 PM. Just show this message to your server.` },
+    { n: "Quiet evening", t: `Hi {name}, this evening is for our regulars at ${r.name}: dessert on the house with dinner between 6 and 9 PM. Just show this message to your server.` },
+    { n: "Come back this week", t: `Hi {name}, we've missed you at ${r.name}. Here's 10% off your bill any day this week. Just show this message to your server.` },
     { n: "Birthday treat", t: `Happy birthday month, {name}! Your dessert at ${r.name} is on us any day this month. Just show this message to your server.` },
     { n: "Festival", t: `Festive greetings, {name}! Our festive menu is on at ${r.name} for three days. Reply here to reserve a table.` },
   ], [r]);
