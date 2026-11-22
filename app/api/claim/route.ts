@@ -25,21 +25,17 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) return NextResponse.json({ error: "Check your name, number and the consent box, then try again." }, { status: 400 });
   const b = parsed.data;
   const d = b.bday ? new Date(b.bday + "T00:00:00") : null;
-  const { data, error } = await supabaseService().rpc("claim_offer", {
-    p_slug: b.slug, p_table: b.table ?? null, p_name: b.name, p_phone: b.phone,
-    p_bday_d: d ? d.getDate() : null, p_bday_m: d ? d.getMonth() + 1 : null, p_ip: ipHash(req),
+  const p_bday_d = d ? d.getDate() : null, p_bday_m = d ? d.getMonth() + 1 : null;
+  const sb = supabaseService();
+  // A guest who left earlier joins again: their old record comes back with the same code, no second welcome offer.
+  const { data: back, error: e1 } = await sb.rpc("rejoin_guest", { p_slug: b.slug, p_name: b.name, p_phone: b.phone, p_bday_d, p_bday_m, p_ip: ipHash(req) });
+  if (e1) return NextResponse.json({ error: "We couldn't save that just now. Try again in a moment." }, { status: 500 });
+  if (back?.error) return NextResponse.json({ error: MSG[back.error] ?? MSG.busy }, { status: 429 });
+  if (back?.found) return NextResponse.json({ code: back.code, whatsapp: back.whatsapp, name: back.name, offer: back.offer, rejoined: true, redeemed: back.redeemed });
+  const { data, error } = await sb.rpc("claim_offer", {
+    p_slug: b.slug, p_table: b.table ?? null, p_name: b.name, p_phone: b.phone, p_bday_d, p_bday_m, p_ip: ipHash(req),
   });
   if (error) return NextResponse.json({ error: "We couldn't save that just now. Try again in a moment." }, { status: 500 });
-  // A guest who left the list earlier can join again: same code, offers switched back on, no second welcome offer.
-  if (data?.error === "exists") {
-    const sb = supabaseService();
-    const { data: r } = await sb.from("restaurants").select("id,name,whatsapp,offer").eq("slug", b.slug).maybeSingle();
-    const { data: g } = r ? await sb.from("guests").select("id,code,redeemed_at,opted_out_at").eq("restaurant_id", r.id).eq("phone", b.phone).maybeSingle() : { data: null };
-    if (r && g?.opted_out_at) {
-      await sb.from("guests").update({ opted_out_at: null, consent_at: new Date().toISOString(), name: b.name }).eq("id", g.id);
-      return NextResponse.json({ code: g.code, whatsapp: r.whatsapp, name: r.name, offer: r.offer, rejoined: true, redeemed: !!g.redeemed_at });
-    }
-  }
   if (data?.error) return NextResponse.json({ error: MSG[data.error] ?? MSG.busy }, { status: data.error === "slow_down" ? 429 : 409 });
   return NextResponse.json({ code: data.code, whatsapp: data.whatsapp, name: data.name, offer: data.offer });
 }

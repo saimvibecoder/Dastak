@@ -19,7 +19,7 @@ export default function StopForm({ slug, name }: { slug: string; name: string })
     setOk(true);
   }
   if (kept) return (<div><p className="notice ok">You&apos;re still on {name}&apos;s list. Nothing has changed, and you can close this page.</p><Back /></div>);
-  if (ok) return (<div><p className="notice ok">Done. If that number was on {name}&apos;s list, it has been removed from their offers.</p><Back /></div>);
+  if (ok) return (<div><p className="notice ok">Done. If that number was on {name}&apos;s list, your name and number have been removed and you won&apos;t get their offers. You can join again any time by scanning a table QR.</p><Back /></div>);
   return (<form className="stackform" onSubmit={submit} noValidate>
     <div className="field"><label htmlFor="sp">WhatsApp number</label>
       <input className={`inp ${err ? "bad" : ""}`} id="sp" inputMode="numeric" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="98765 43210" />

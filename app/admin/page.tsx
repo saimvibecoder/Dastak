@@ -14,7 +14,7 @@ type Row = { slug: string; name: string; area: string | null; created_at: string
   plan: string; setup_price: number | null; monthly_price: number | null; plan_note: string | null; last_draft: string | null; delete_requested_at: string | null };
 
 export default async function Admin() {
-  const { sb, user } = await requireUser();
+  const { sb, user, twoStep } = await requireUser();
   const { data: adm } = await sb.from("admins").select("user_id").eq("user_id", user.id).maybeSingle();
   if (!adm) redirect("/app");
   const { data } = await sb.rpc("admin_overview");
@@ -37,6 +37,10 @@ export default async function Admin() {
   return (<><Nav current="app" signedIn /><main id="main" className="wrap app">
     <div className="apphead"><div><div className="c2">Admin · {user.email}</div><h1>Overview</h1></div>
       <div className="row"><InstallApp label="Install Dastak Admin" /><form action="/auth/signout" method="post"><button className="btn ghost sm">Log out</button></form></div></div>
+    {!twoStep ? <div className="card nudge" style={{ marginBottom: 24 }}><div className="sp"><div className="t3">Turn on two-step login</div>
+      <div className="c2">This account can see every restaurant&apos;s guests. Add a code from an authenticator app so a stolen password or email isn&apos;t enough to get in.</div></div>
+      <Link className="btn pri sm" href="/admin/security">Set it up</Link></div>
+    : <p className="c2" style={{ marginBottom: 16, fontSize: 14 }}>Two-step login is on. <Link href="/admin/security">Manage</Link></p>}
 
     <div className="grid g3">{kpis.map(([l, n, d]) => <div className="card kpi" style={{ padding: 16 }} key={l}><div className="c5">{l}</div><div className="n mono">{n}</div><div className="d">{d}</div></div>)}</div>
 

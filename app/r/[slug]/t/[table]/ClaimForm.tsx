@@ -80,7 +80,7 @@ export default function ClaimForm({ slug, table, r }: { slug: string; table: num
         <div className="field"><label htmlFor="gb">Birthday <span className="c5">(optional, for a birthday treat)</span></label>
           <input className="inp" id="gb" type="date" value={f.bday} onChange={(e) => setF({ ...f, bday: e.target.value })} /></div>
         <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" value={f.website} onChange={(e) => setF({ ...f, website: e.target.value })} style={{ position: "absolute", left: -9999, width: 1, height: 1 }} />
-        <label className="ck"><input type="checkbox" checked={f.consent} onChange={(e) => setF({ ...f, consent: e.target.checked })} /> <span>Send me offers from {r.name} on WhatsApp. I can leave the list any time.</span></label>
+        <label className="ck"><input type="checkbox" checked={f.consent} onChange={(e) => setF({ ...f, consent: e.target.checked })} /> <span>Send me offers from {r.name} on WhatsApp. I can leave the list any time. <a href="/privacy" target="_blank" rel="noopener">How my details are used</a></span></label>
         <div className="err">{errs.consent}</div>
         {server && <p className="notice err" role="alert">{server}</p>}
         <button className="btn pri" type="submit" disabled={busy}>{busy ? "Saving" : r.premium ? "Join the guest list" : "Claim my welcome offer"}</button>

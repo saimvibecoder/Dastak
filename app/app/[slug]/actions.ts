@@ -20,6 +20,8 @@ export async function addVisit(slug: string, guestId: string) {
   done(slug);
 }
 export async function setOptOut(slug: string, guestId: string, out: boolean) {
+  // Taking a guest off removes their name and number; only the guest can bring them back by joining again.
+  if (!out) return;
   const { sb, r } = await requireRestaurant(slug);
   await sb.from("guests").update({ opted_out_at: out ? new Date().toISOString() : null }).eq("id", uuid.parse(guestId)).eq("restaurant_id", r.id);
   done(slug);

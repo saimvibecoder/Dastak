@@ -381,3 +381,6 @@ a.plain{text-decoration:none}
   81%{transform:translateY(-10%)}84%{transform:translateY(-10%)}91.5%{transform:translateY(-3%)}94.5%{transform:translateY(-3%)}100%{transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.rp .rp-paper{animation:none!important;opacity:1!important;transform:none!important}.rp-spin{animation:none}}
 .tc-kicker{display:block;font-size:12px;line-height:16px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.7;margin-bottom:6px}
+.legal h2{font-size:24px;line-height:32px;margin:40px 0 12px}
+.legal ul{margin:0 0 16px 20px;color:var(--mfg)}.legal li{margin-bottom:8px}
+.legal a{text-decoration:underline;text-underline-offset:3px}

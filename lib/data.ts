@@ -13,13 +13,24 @@ export type Restaurant = {
 const getAuth = cache(async () => {
   const sb = await supabaseServer();
   const { data: { user } } = await sb.auth.getUser();
-  return { sb, user };
+  // Worked out from what we already have, to avoid another call to the auth server.
+  let aal: { currentLevel: string; nextLevel: string } | null = null;
+  if (user) {
+    const { data: { session } } = await sb.auth.getSession();
+    let current = "aal1";
+    try { current = JSON.parse(Buffer.from((session?.access_token ?? "").split(".")[1] ?? "", "base64url").toString()).aal ?? "aal1"; } catch {}
+    const hasFactor = (user.factors ?? []).some((f) => f.status === "verified");
+    aal = { currentLevel: current, nextLevel: hasFactor ? "aal2" : "aal1" };
+  }
+  return { sb, user, aal };
 });
 
-export async function requireUser() {
-  const { sb, user } = await getAuth();
+// Signed in, and past the two-step code if this account has one set up.
+export async function requireUser(opts: { allowAal1?: boolean } = {}) {
+  const { sb, user, aal } = await getAuth();
   if (!user) redirect("/login");
-  return { sb, user };
+  if (!opts.allowAal1 && aal?.nextLevel === "aal2" && aal.currentLevel !== "aal2") redirect("/verify");
+  return { sb, user, twoStep: aal?.nextLevel === "aal2" };
 }
 
 // The three lookups run together instead of one after another.
