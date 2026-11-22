@@ -11,7 +11,7 @@ export default function Terms() {
     <p className="c2">Last updated {CONTACT.updated}</p>
 
     <h2>For guests</h2>
-    <p>Joining a restaurant&apos;s list is free and optional. The welcome offer and every later offer are set by that restaurant, which is responsible for honouring them and for their conditions. Each welcome offer can be used once per number. You can leave the list at any time from the link in any message. See the <Link href="/privacy">privacy policy</Link> for what is stored and how to have it removed.</p>
+    <p>Joining a restaurant&apos;s list is free, optional and only for people aged 18 or older. The welcome offer and every later offer are set by that restaurant, which is responsible for honouring them and for their conditions. Each welcome offer can be used once per number. You can leave the list at any time from the link in any message. See the <Link href="/privacy">privacy policy</Link> for what is stored and how to have it removed.</p>
 
     <h2>For restaurants</h2>
     <p>By using Dastak, the restaurant agrees to:</p>

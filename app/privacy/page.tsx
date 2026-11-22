@@ -19,6 +19,9 @@ export default function Privacy() {
     <p>To stop abuse, we also keep a scrambled, one-way version of the network address used to join or leave. It can&apos;t be turned back into the address and is used only to slow down repeated attempts.</p>
     <p>When someone just opens the QR page without joining, we count the visit. We don&apos;t store anything that identifies them.</p>
 
+    <h2>Age</h2>
+    <p>Joining a guest list is only for people aged 18 or older, and the consent box says so. If we learn that someone under 18 has joined, we remove their details. A parent can ask us to do this using the contact below.</p>
+
     <h2>Why we store it</h2>
     <p>So that the restaurant the guest joined can give them their welcome offer and send them offers on WhatsApp. Nothing else. Guest numbers are never sold, never shared with other restaurants and never used by Dastak to contact guests for its own purposes.</p>
 
