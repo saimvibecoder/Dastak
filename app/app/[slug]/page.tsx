@@ -11,14 +11,14 @@ type Stats = { total: number; all: number; week: number; prev_week: number; rede
 export default async function Overview({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { sb, r, role } = await requireRestaurant(slug);
-  const [{ data: st }, { data: days }, { data: heat }, { data: latest }, { data: fn }] = await Promise.all([
+  const [{ data: st }, { data: days }, { data: heat }, { data: latest }, { data: fn }, { data: od }] = await Promise.all([
     sb.rpc("guest_stats", { rid: r.id }),
     sb.rpc("guests_per_day", { rid: r.id, days: 14 }),
     sb.rpc("visit_heatmap", { rid: r.id }),
     sb.from("guests").select("id,name,table_no,created_at,redeemed_at,code").eq("restaurant_id", r.id).order("created_at", { ascending: false }).limit(5),
     sb.rpc("funnel", { rid: r.id }),
+    sb.from("offer_drafts").select("id,name,created_at").eq("restaurant_id", r.id).is("used_at", null).order("created_at", { ascending: false }).limit(1).maybeSingle(),
   ]);
-  const { data: od } = await sb.from("offer_drafts").select("id,name,created_at").eq("restaurant_id", r.id).is("used_at", null).order("created_at", { ascending: false }).limit(1).maybeSingle();
   const ready = od ? (<div className="card nudge"><div className="sp"><div className="t3">Your offer for this week is ready: {od.name}</div>
       <div className="c2">Written for you by Dastak. Check it and send it to your guests in a few taps.</div></div>
       <Link className="btn pri sm" href={`/app/${slug}/send?draft=${od.id}`}>Review and send</Link></div>) : null;

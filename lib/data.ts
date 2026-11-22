@@ -1,5 +1,6 @@
 import "server-only";
 import { redirect, notFound } from "next/navigation";
+import { cache } from "react";
 import { supabaseServer } from "./supabase/server";
 
 export type Restaurant = {
@@ -8,19 +9,29 @@ export type Restaurant = {
   slow_slots: unknown; card_style: "free" | "premium"; offer_type: string;
 };
 
-export async function requireUser() {
+// One verified auth check per request, shared by the layout and the page.
+const getAuth = cache(async () => {
   const sb = await supabaseServer();
   const { data: { user } } = await sb.auth.getUser();
+  return { sb, user };
+});
+
+export async function requireUser() {
+  const { sb, user } = await getAuth();
   if (!user) redirect("/login");
   return { sb, user };
 }
 
-export async function requireRestaurant(slug: string) {
+// The three lookups run together instead of one after another.
+export const requireRestaurant = cache(async (slug: string) => {
   const { sb, user } = await requireUser();
-  const { data: r } = await sb.from("restaurants").select("id,slug,name,area,offer,code_prefix,whatsapp,palette,tables,slow_slots,card_style,offer_type").eq("slug", slug).maybeSingle();
+  const [{ data: r }, { data: ms }, { data: adm }] = await Promise.all([
+    sb.from("restaurants").select("id,slug,name,area,offer,code_prefix,whatsapp,palette,tables,slow_slots,card_style,offer_type").eq("slug", slug).maybeSingle(),
+    sb.from("members").select("role,restaurant_id").eq("user_id", user.id),
+    sb.from("admins").select("user_id").eq("user_id", user.id).maybeSingle(),
+  ]);
   if (!r) notFound();
-  const { data: m } = await sb.from("members").select("role").eq("restaurant_id", r.id).eq("user_id", user.id).maybeSingle();
-  const { data: adm } = await sb.from("admins").select("user_id").eq("user_id", user.id).maybeSingle();
+  const m = ms?.find((x) => x.restaurant_id === r.id);
   const role: "owner" | "staff" = m?.role === "owner" || adm ? "owner" : "staff";
   return { sb, user, r: r as Restaurant, role, isAdmin: !!adm };
-}
+});

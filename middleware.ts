@@ -13,7 +13,11 @@ export async function middleware(req: NextRequest) {
       },
     },
   });
-  const { data: { user } } = await sb.auth.getUser();
+  // Fast gate only: reads the signed-in cookie (and refreshes it when it expires)
+  // without a round trip to the auth server. Every page still verifies the user
+  // with getUser(), and the database checks access with RLS.
+  const { data: { session } } = await sb.auth.getSession();
+  const user = session?.user;
   const p = req.nextUrl.pathname;
   if (!user && p.startsWith("/admin") && p !== "/admin/login") {
     const u = req.nextUrl.clone(); u.pathname = "/admin/login"; u.search = ""; return NextResponse.redirect(u);
