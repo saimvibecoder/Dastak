@@ -6,6 +6,7 @@
 create schema if not exists private;
 revoke all on schema private from public, anon, authenticated;
 create table if not exists private.secrets (k text primary key, v text not null);
+alter table private.secrets enable row level security;
 revoke all on private.secrets from public, anon, authenticated;
 insert into private.secrets (k, v) values ('phone_pepper', replace(gen_random_uuid()::text || gen_random_uuid()::text, '-', ''))
 on conflict (k) do nothing;
