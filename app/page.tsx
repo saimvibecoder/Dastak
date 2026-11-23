@@ -31,7 +31,7 @@ export default async function Home() {
         <header className="hero">
           <div className="wrap">
             <div className="hero-mark fu d1"><DoorLogo size={0.5} /></div>
-            <span className="badge fu d1"><b></b>Taking 5 founding restaurants in Hazratganj</span>
+            <span className="badge fu d1"><b></b>Taking 5 founding restaurants in Lucknow</span>
             <h1 className="fu d2">Fill your <em>slow</em> afternoons with guests who&apos;ve eaten with you before</h1>
             <p className="sub fu d3">A QR on every table gives guests a welcome offer for joining your WhatsApp guest list. When the dining room goes quiet, you invite them back.</p>
             <div className="ctas fu d4">
@@ -107,7 +107,7 @@ export default async function Home() {
           <div className="final rv">
             <h2>See it running on your <em>own</em> tables</h2>
             <p className="c2" style={{ margin: "16px auto 16px", maxWidth: 520 }}>A short visit: we look at your tables and menu, pick your welcome offer, and set up the dashboard with your restaurant&apos;s name on it.</p>
-            <p className="founding">Taking 5 founding restaurants in Hazratganj this season. Each one is set up personally, and the founding price stays locked for as long as you stay.</p>
+            <p className="founding">Taking 5 founding restaurants in Lucknow this season. Each one is set up personally, and the founding price stays locked for as long as you stay.</p>
             <div className="ctas" style={{ marginTop: 0 }}><a className="btn pri" href={book} target="_blank" rel="noopener">Book a free walkthrough</a><Link className="btn ghost" href="/login">Owner log in</Link></div>
           </div>
         </div></section>
