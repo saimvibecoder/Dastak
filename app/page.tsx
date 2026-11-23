@@ -23,7 +23,7 @@ const TAG = "Your dining room is full on Saturday night. Dastak is for the Monda
 export default async function Home() {
   const sb = await supabaseServer();
   const { data: { user } } = await sb.auth.getUser();
-  const book = wa(process.env.NEXT_PUBLIC_SALES_WHATSAPP, "Hi, I saw Dastak and would like a walkthrough for my restaurant.");
+  const book = wa(process.env.NEXT_PUBLIC_SALES_WHATSAPP, "Hi, I saw Dastak and would like a walkthrough for my restaurant, and to ask about a founding spot.");
   return (
     <>
       <Nav current="home" signedIn={!!user} />
@@ -31,7 +31,7 @@ export default async function Home() {
         <header className="hero">
           <div className="wrap">
             <div className="hero-mark fu d1"><DoorLogo size={0.5} /></div>
-            <span className="badge fu d1"><b></b>Built for restaurants in Lucknow</span>
+            <span className="badge fu d1"><b></b>Taking 5 founding restaurants in Hazratganj</span>
             <h1 className="fu d2">Fill your <em>slow</em> afternoons with guests who&apos;ve eaten with you before</h1>
             <p className="sub fu d3">A QR on every table gives guests a welcome offer for joining your WhatsApp guest list. When the dining room goes quiet, you invite them back.</p>
             <div className="ctas fu d4">
@@ -106,7 +106,8 @@ export default async function Home() {
         <section className="band" style={{ paddingTop: 0 }}><div className="wrap">
           <div className="final rv">
             <h2>See it running on your <em>own</em> tables</h2>
-            <p className="c2" style={{ margin: "16px auto 32px", maxWidth: 520 }}>A short visit: we look at your tables and menu, pick your welcome offer, and set up the dashboard with your restaurant&apos;s name on it.</p>
+            <p className="c2" style={{ margin: "16px auto 16px", maxWidth: 520 }}>A short visit: we look at your tables and menu, pick your welcome offer, and set up the dashboard with your restaurant&apos;s name on it.</p>
+            <p className="founding">Taking 5 founding restaurants in Hazratganj this season. Each one is set up personally, and the founding price stays locked for as long as you stay.</p>
             <div className="ctas" style={{ marginTop: 0 }}><a className="btn pri" href={book} target="_blank" rel="noopener">Book a free walkthrough</a><Link className="btn ghost" href="/login">Owner log in</Link></div>
           </div>
         </div></section>
