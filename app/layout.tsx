@@ -7,11 +7,16 @@ import PaletteSwitcher from "@/components/PaletteSwitcher";
 import "./globals.css";
 
 
+const SITE = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_ENV === "production" ? "https://dastak.food" : "http://localhost:3000");
+const TITLE = "Dastak: WhatsApp guest list for restaurants in Lucknow";
+const DESC = "Turn every table into a WhatsApp guest list. Diners scan a QR, claim a welcome offer and join your list, so you can fill your slow hours. Now in Lucknow.";
+
 export const metadata: Metadata = {
-  title: { default: "Dastak for restaurants", template: "%s · Dastak" },
-  description: "Dastak turns every table into a WhatsApp guest list. Diners scan a QR for a welcome offer, join your list, and come back when you message them.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
-  openGraph: { title: "Dastak for restaurants", description: "Turn every diner into a regular on WhatsApp." },
+  title: { default: TITLE, template: "%s · Dastak" },
+  description: DESC,
+  metadataBase: new URL(SITE),
+  openGraph: { type: "website", siteName: "Dastak", locale: "en_IN", title: TITLE, description: "Turn every diner into a regular on WhatsApp." },
+  twitter: { card: "summary_large_image", title: TITLE, description: "Turn every diner into a regular on WhatsApp." },
   icons: { icon: "/icon.svg", apple: "/apple-touch-icon.png" },
   manifest: "/manifest.webmanifest",
   appleWebApp: { capable: true, title: "Dastak", statusBarStyle: "default" },

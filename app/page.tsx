@@ -17,6 +17,24 @@ const FAQ: [string, string][] = [
   ["Can my staff use it too?", "Yes. Invite them by email. Staff can check codes and send offers; only owners change settings or remove guests."],
   ["How much does Dastak cost?", "A one time setup fee plus a small monthly fee, quoted after we see your tables and menu."],
 ];
+export const metadata = { alternates: { canonical: "/" } };
+
+// Structured data: tells Google and AI assistants what Dastak is. FAQ answers come from the same FAQ list
+// shown on the page, so the two can never drift apart.
+const BASE = "https://dastak.food";
+const JSONLD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": `${BASE}/#organization`, name: "Dastak", url: `${BASE}/`, logo: `${BASE}/apple-touch-icon.png`, email: "hello@dastak.food",
+      description: "Table QR codes that turn restaurant diners into a WhatsApp guest list, so restaurants can fill slow hours with returning guests.",
+      areaServed: { "@type": "City", name: "Lucknow" } },
+    { "@type": "WebSite", "@id": `${BASE}/#website`, url: `${BASE}/`, name: "Dastak", inLanguage: "en-IN", publisher: { "@id": `${BASE}/#organization` } },
+    { "@type": "WebApplication", "@id": `${BASE}/#app`, name: "Dastak", url: `${BASE}/`, applicationCategory: "BusinessApplication", operatingSystem: "Web",
+      description: "Guests scan a table QR, claim a welcome offer and join the restaurant's WhatsApp list. Owners see slow hours, send offers and track which guests came back.",
+      audience: { "@type": "BusinessAudience", audienceType: "Restaurant owners" }, provider: { "@id": `${BASE}/#organization` } },
+    { "@type": "FAQPage", "@id": `${BASE}/#faq`, mainEntity: FAQ.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
+  ],
+};
 const SAMPLE = [6, 11, 8, 5, 7, 9, 10, 7, 12, 9, 4, 8, 13, 3].map((n, i) => ({ label: `${6 + i} Nov`, n }));
 const TAG = "Your dining room is full on Saturday night. Dastak is for the Monday afternoon.";
 
@@ -26,6 +44,7 @@ export default async function Home() {
   const book = wa(process.env.NEXT_PUBLIC_SALES_WHATSAPP, "Hi, I saw Dastak and would like a walkthrough for my restaurant, and to ask about a founding spot.");
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSONLD).replace(/</g, "\\u003c") }} />
       <Nav current="home" signedIn={!!user} />
       <main id="main">
         <header className="hero">

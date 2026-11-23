@@ -29,7 +29,7 @@ export default async function Guests({ params, searchParams }: { params: Promise
       <input className="inp" name="q" defaultValue={q} placeholder="Search name, number or code" style={{ maxWidth: 320 }} aria-label="Search guests" />
       <select className="inp" name="f" defaultValue={f} style={{ width: "auto" }} aria-label="Filter">{FILTERS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select>
       <button className="btn ghost sm">Search</button><span className="sp"></span>
-      <a className="btn ghost sm" href={`/app/${slug}/guests/export`}>Download CSV</a>
+      {role === "owner" && <a className="btn ghost sm" href={`/app/${slug}/guests/export`}>Download CSV</a>}
     </form>
     <p className="c5" style={{ marginTop: 12 }}>{count ?? 0} guests{pages > 1 ? ` · page ${page} of ${pages}` : ""}</p>
     {rows?.length ? <div className="scroll" style={{ marginTop: 8 }}><table className="stack"><thead><tr><th>Guest</th><th>WhatsApp</th><th>Table</th><th>Joined</th><th>Visits</th><th>Birthday</th><th>Code</th><th></th></tr></thead><tbody>

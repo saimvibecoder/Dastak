@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { CONTACT } from "@/lib/legal";
 
-export const metadata = { title: "Privacy policy", description: "What Dastak stores about restaurant guests and staff, why, for how long, and how to have it removed." };
+export const metadata = { title: "Privacy policy", description: "What Dastak stores about restaurant guests and staff, why, for how long, and how to have it removed.", alternates: { canonical: "/privacy" } };
 
 export default function Privacy() {
   return (<><Nav /><main id="main" className="legal">

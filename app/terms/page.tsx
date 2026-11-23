@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { CONTACT } from "@/lib/legal";
 
-export const metadata = { title: "Terms of use", description: "The rules for restaurants and guests using Dastak." };
+export const metadata = { title: "Terms of use", description: "The rules for restaurants and guests using Dastak.", alternates: { canonical: "/terms" } };
 
 export default function Terms() {
   return (<><Nav /><main id="main" className="legal">

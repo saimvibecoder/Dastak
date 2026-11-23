@@ -1,6 +1,6 @@
 import Nav from "@/components/Nav";
 import LoginForm from "./LoginForm";
-export const metadata = { title: "Log in" };
+export const metadata = { title: "Log in", robots: { index: false } };
 export default async function Login({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams;
   return (<><Nav current="login" /><main id="main" className="center-page"><div className="card narrow">

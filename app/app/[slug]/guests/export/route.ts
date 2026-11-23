@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
-import { supabaseServer } from "@/lib/supabase/server";
+import { requireRestaurant } from "@/lib/data";
 
 const cell = (v: unknown) => { const s = String(v ?? ""); const safe = /^[=+\-@]/.test(s) ? "'" + s : s; return /[",\n]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe; };
 export async function GET(_: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const sb = await supabaseServer();
-  const { data: { user } } = await sb.auth.getUser();
-  if (!user) return new NextResponse("Log in first.", { status: 401 });
-  const { data: r } = await sb.from("restaurants").select("id,slug").eq("slug", slug).maybeSingle();
-  if (!r) return new NextResponse("Not found.", { status: 404 });
+  // Same check as every dashboard page: signed in, past two-step login, member of this restaurant.
+  // Only owners (and the admin) may take the full list of names and numbers out of Dastak.
+  const { sb, r, role } = await requireRestaurant(slug);
+  if (role !== "owner") return new NextResponse("Only owners can export the guest list.", { status: 403 });
   const rows: string[] = ["name,whatsapp,table,joined,birthday,code,used,opted_out"];
   for (let from = 0; ; from += 1000) {
     const { data } = await sb.from("guests").select("name,phone,table_no,created_at,birthday_day,birthday_month,code,redeemed_at,opted_out_at").eq("restaurant_id", r.id).order("created_at").range(from, from + 999);
