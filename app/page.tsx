@@ -15,7 +15,7 @@ const FAQ: [string, string][] = [
   ["Could my WhatsApp number get blocked?", "Offers go out from a separate WhatsApp number for Dastak, never your main business line, so your regular number is never at risk. Only guests who opted in get messages, and every message has a one-tap way to leave."],
   ["What do I need at the restaurant?", "A separate WhatsApp Business number for Dastak offers, on a phone or linked to WhatsApp Web, and printed QR cards for your tables. We design the cards with your name and welcome offer."],
   ["Can my staff use it too?", "Yes. Invite them by email. Staff can check codes and send offers; only owners change settings or remove guests."],
-  ["How much does Dastak cost?", "A one time setup fee plus a small monthly fee, quoted after we see your tables and menu."],
+  ["How much does Dastak cost?", "Pricing depends on your restaurant's size and number of tables. Setup starts from ₹10,000, with a monthly plan from ₹1,000. We confirm your exact price after seeing your tables and menu."],
 ];
 export const metadata = { alternates: { canonical: "/" } };
 
