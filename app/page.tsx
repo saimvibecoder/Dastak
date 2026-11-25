@@ -2,8 +2,8 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import Reveal from "@/components/Reveal";
 import Bars, { BarLabels } from "@/components/Bars";
-import DoorLogo from "@/components/DoorLogo";
 import Footer from "@/components/Footer";
+import ReelButton from "@/components/ReelButton";
 import { wa } from "@/lib/util";
 import { supabaseServer } from "@/lib/supabase/server";
 
@@ -35,7 +35,7 @@ const JSONLD = {
     { "@type": "FAQPage", "@id": `${BASE}/#faq`, mainEntity: FAQ.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
   ],
 };
-const SAMPLE = [6, 11, 8, 5, 7, 9, 10, 7, 12, 9, 4, 8, 13, 3].map((n, i) => ({ label: `${6 + i} Nov`, n }));
+const SAMPLE = [6, 11, 8, 5, 7, 9, 10, 7, 12, 9, 4, 8, 13, 10].map((n, i) => ({ label: `${6 + i} Nov`, n }));
 const TAG = "Your dining room is full on Saturday night. Dastak is for the Monday afternoon.";
 
 export default async function Home() {
@@ -46,18 +46,16 @@ export default async function Home() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSONLD).replace(/</g, "\\u003c") }} />
       <Nav current="home" signedIn={!!user} />
-      <main id="main">
+      <main id="main" className="home">
         <header className="hero">
           <div className="wrap">
-            <div className="hero-mark fu d1"><DoorLogo size={0.5} /></div>
             <span className="badge fu d1"><b></b>Taking 5 founding restaurants in Lucknow</span>
             <h1 className="fu d2">Fill your <em>slow</em> afternoons with guests who&apos;ve eaten with you before</h1>
             <p className="sub fu d3">A QR on every table gives guests a welcome offer for joining your WhatsApp guest list. When the dining room goes quiet, you invite them back.</p>
             <div className="ctas fu d4">
               <a className="btn pri" href={book} target="_blank" rel="noopener">Book a free walkthrough</a>
-              <a className="btn ghost" href="#how"><span className="play"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1l7 4-7 4z" fill="currentColor" /></svg></span>See how it works</a>
+              <ReelButton />
             </div>
-            <p className="c2 proof fu d5">Offers go out from a separate WhatsApp number for Dastak, never your main business line. Your list stays yours.</p>
             <div className="pv fu d5">
               <div className="glass">
                 <div className="pvin">
@@ -81,7 +79,7 @@ export default async function Home() {
         </header>
 
         <section className="band" id="how"><div className="wrap">
-          <div className="sec-h rv"><h2>Four steps from table to <em>return</em> visit</h2><p>Everything runs on the phones your guests and staff already carry.</p></div>
+          <div className="sec-h rv"><h2>Four steps from table to return visit</h2><p>Everything runs on the phones your guests and staff already carry</p></div>
           <div className="grid g4">
             {[["Guest scans the table card", "A branded QR card shows your welcome offer. The phone camera opens your guest page."],
               ["They join and claim it", "Name, WhatsApp number, birthday if they like, and a consent tick. They get a pass with a code to show the server."],
@@ -93,7 +91,7 @@ export default async function Home() {
         </div></section>
 
         <section className="band" style={{ paddingTop: 0 }}><div className="wrap">
-          <div className="sec-h rv"><h2>What you get from <em>your</em> list</h2></div>
+          <div className="sec-h rv"><h2>What you get from your list</h2></div>
           <div className="grid g2">
             {[["Guests you can reach again", "Instagram decides who sees your post. A WhatsApp message lands on the phone of every guest who opted in."],
               ["Slow hours filled on purpose", "A grid of visits by day and hour shows exactly when the dining room sits empty, so offers go out for that slot."],
@@ -109,12 +107,13 @@ export default async function Home() {
         </div></section>
 
         <section className="band"><div className="wrap" style={{ maxWidth: 780 }}>
-          <div className="sec-h rv"><h2>Why WhatsApp beats <em>another</em> post</h2></div>
+          <div className="sec-h rv"><h2>Why WhatsApp beats another post</h2></div>
           <div className="card rv">
             <div className="vs"><span className="tick n">✕</span><div><div className="t3">Social media</div><p className="c2">The algorithm decides how many of your followers see an offer, and when.</p></div></div>
             <div className="vs"><span className="tick n">✕</span><div><div className="t3">Delivery apps</div><p className="c2">They own the customer and take a commission on every order.</p></div></div>
             <div className="vs"><span className="tick y">✓</span><div><div className="t3">Your WhatsApp list</div><p className="c2">Guests who chose to hear from you, reached directly, at no commission.</p></div></div>
           </div>
+          <p className="c2 rv" style={{ textAlign: "center", marginTop: 24 }}>Offers go out from a separate WhatsApp number for Dastak, never your main business line. Your list stays yours.</p>
         </div></section>
 
         <section className="band" style={{ paddingTop: 0 }}><div className="wrap" style={{ maxWidth: 780 }}>
@@ -124,7 +123,7 @@ export default async function Home() {
 
         <section className="band" style={{ paddingTop: 0 }}><div className="wrap">
           <div className="final rv">
-            <h2>See it running on your <em>own</em> tables</h2>
+            <h2>See it running on your own tables</h2>
             <p className="c2" style={{ margin: "16px auto 16px", maxWidth: 520 }}>A short visit: we look at your tables and menu, pick your welcome offer, and set up the dashboard with your restaurant&apos;s name on it.</p>
             <p className="founding">Taking 5 founding restaurants in Lucknow this season. Each one is set up personally, and the founding price stays locked for as long as you stay.</p>
             <div className="ctas" style={{ marginTop: 0 }}><a className="btn pri" href={book} target="_blank" rel="noopener">Book a free walkthrough</a><Link className="btn ghost" href="/login">Owner log in</Link></div>

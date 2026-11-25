@@ -7,7 +7,7 @@ export default function Bars({ data, height = 200 }: { data: { label: string; n:
         const h = Math.max(3, ((H - 28) * d.n) / max);
         return (
           <g key={i}>
-            <rect x={i * bw + bw * 0.12} y={H - 22 - h} width={bw * 0.76} height={h} rx={6} fill="var(--accent)" opacity={i === last ? 1 : 0.35 + (0.5 * i) / Math.max(1, last)}>
+            <rect x={i * bw + bw * 0.12} y={H - 22 - h} width={bw * 0.76} height={h} rx={6} fill={i === last ? "var(--accent)" : "var(--mfg)"} opacity={i === last ? 1 : 0.28}>
               <title>{`${d.label}: ${d.n} guests`}</title>
             </rect>
           </g>
